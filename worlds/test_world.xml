@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<world>
+    <!--robot name="kuka" file="../bin/merged.rob" translation="0 0 0.01"/-->
+    <robot name="kuka" file="../../kukaarm_gr/kuka.rob" translation="0 0 0.01">
+    <!--<robot name="tx90l" file="../../data/robots/tx90robotiq.rob" translation="0 0 0" color="0.2 1 0.5">-->
+        <sensors>
+          <JointPositionSensor name="encoders" indices="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18"/>
+          <!--<DriverTorqueSensor name="current_sensors" indices="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14"/>-->
+          <ForceTorqueSensor name="Base_ForceSensor" link="6" hasForce="0 0 1" hasTorque="1 1 0"/>
+          <ForceTorqueSensor name="Link1_ForceSensor" link="7" hasForce="0 0 1" hasTorque="1 1 0"/>
+          <ForceTorqueSensor name="Link2_ForceSensor" link="8" hasForce="0 0 1" hasTorque="1 1 0"/>
+          <ForceTorqueSensor name="Link3_ForceSensor" link="9" hasForce="0 0 1" hasTorque="1 1 0"/>
+          <ForceTorqueSensor name="Link4_ForceSensor" link="10" hasForce="0 0 1" hasTorque="1 1 0"/>
+          <ForceTorqueSensor name="Link5_ForceSensor" link="11" hasForce="0 0 1" hasTorque="1 1 0"/>
+          <ForceTorqueSensor name="Link6_ForceSensor" link="12" hasForce="0 0 1" hasTorque="1 1 0"/>
+          <ForceTorqueSensor name="Link7_ForceSensor" link="13" hasForce="0 0 1" hasTorque="1 1 0"/>
+          <ForceTorqueSensor name="Link8_ForceSensor" link="14" hasForce="0 0 1" hasTorque="1 1 0"/>
+          <FilteredSensor name="Base_ForceSensor_Filtered" sensor="Base_ForceSensor" smoothing="0.8" />
+          <FilteredSensor name="Link1_ForceSensor_Filtered" sensor="Link1_ForceSensor" smoothing="0.8" />
+          <FilteredSensor name="Link2_ForceSensor_Filtered" sensor="Link2_ForceSensor" smoothing="0.8" />
+          <FilteredSensor name="Link3_ForceSensor_Filtered" sensor="Link3_ForceSensor" smoothing="0.8" />
+          <FilteredSensor name="Link4_ForceSensor_Filtered" sensor="Link4_ForceSensor" smoothing="0.8" />
+          <FilteredSensor name="Link5_ForceSensor_Filtered" sensor="Link5_ForceSensor" smoothing="0.8" />
+          <FilteredSensor name="Link6_ForceSensor_Filtered" sensor="Link6_ForceSensor" smoothing="0.8" />
+          <FilteredSensor name="Link7_ForceSensor_Filtered" sensor="Link7_ForceSensor" smoothing="0.8" />
+          <FilteredSensor name="Link8_ForceSensor_Filtered" sensor="Link8_ForceSensor" smoothing="0.8" />
+        </sensors>
+    </robot>
+
+    <!-- TERRAIN -->
+    <terrain file="../data/terrains/plane.off"/>
+
+    <!-- the table -->
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.4" translation="0.8 0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.4" translation="0.8 -0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.4" translation="1.3 0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.4" translation="1.3 -0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.6 0.6 0.02" translation="0.775 -0.275 0.4">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+
+
+     <!-- the table -->
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.2" translation="0.3 0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.2" translation="0.3 -0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.6 0.6 0.02" translation="0.275 -0.275 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.02 0.6 0.2" translation="0.775 -0.275 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+
+
+    <terrain file="../data/terrains/cube.off" scale="0.02 0.6 0.6" translation="1.37 -0.275 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+
+    <terrain file="../data/terrains/cube.off" scale="0.6 0.02 0.6" translation="0.775 -0.275 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.6 0.02 0.6" translation="0.775 0.31 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.6 0.6 0.02" translation="0.785 -0.275 0.8">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+
+      <!-- the table -->
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.2" translation="-0.5 0.25 0.01">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.2" translation="-0.5 -0.25 0.01">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.2" translation="-1 0.25 0.01">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.05 0.05 0.2" translation="-1 -0.25 0.01">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.6 0.6 0.02" translation="-1.025 -0.275 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+
+    <terrain file="../data/terrains/cube.off" scale="0.02 0.6 0.6" translation="-1.025 -0.275 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.6 0.02 0.6" translation="-1.025 -0.275 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.6 0.02 0.6" translation="-1.025 0.325 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="../data/terrains/cube.off" scale="0.02 0.6 0.1" translation="-0.525 -0.275 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+
+
+    <!-- RIGID OBJECTS-->
+    <rigidObject name="cyl" file="../data/objects/cylinder.obj" scale="1.5 1.5 1.5" position="0.5 0.2 0.33" >
+            <display faceColor="1 1 0"/>
+    </rigidObject>
+    <rigidObject name="coll_check1" file="../data/objects/cylinder.obj" scale="1.51 1.51 0.751" position="0.5 0.2 0.38" >
+            <display faceColor="1 0 0"/>
+            <geometry scale="1.1 1.1 0.4"/>
+    </rigidObject>
+
+    <!-- SIMULATION -->
+    <simulation>
+    <globals maxContacts="20"/>
+    </simulation>
+</world>
