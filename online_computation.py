@@ -639,7 +639,8 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             new_mesh = world.loadRigidObject("objects/objects/block.obj")
             new_mesh.setName("my_mesh"+str(i))
             new_mesh.geometry().setTriangleMesh(m)
-            new_mesh.setTransform([0, 1, 0, 0, 0, 1, 1, 0, 0], dest)
+            R = [0, 1, 0, 0, 0, 1, 1, 0, 0]
+            new_mesh.setTransform(R, dest)
             new_mesh.geometry().scale(scale[0], scale[1], scale[2])
 
             color_arr = fill_colors(new_mesh, 6)
@@ -656,6 +657,8 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             normals = []
             for ind in indeces:
                 current_normal = calculate_normal(verti_arr[ind[0]], verti_arr[ind[1]], verti_arr[ind[2]])
+                rot_matrix = so3.matrix(R)
+                current_normal = np.matmul(rot_matrix, current_normal)
                 center_of_face = np.mean([verti_arr[ind[0]], verti_arr[ind[1]], verti_arr[ind[2]]], axis=0)
                 end_of_normal = current_normal+center_of_face
                 self.ends.append(end_of_normal)
@@ -666,7 +669,8 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         vis.lock()
         vis.remove("world")
         vis.add("world", self.world)
-        vis.colorize.colorize(new_mesh, color_arr)
+        #vis.colorize.colorize(new_mesh, color_arr)
+        vis.colorize.colorize(new_mesh, 'index', 'random', 'faces')
         vis.unlock()
         return trimeshes
 

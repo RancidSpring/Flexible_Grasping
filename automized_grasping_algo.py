@@ -18,8 +18,10 @@ from numpy import asarray
 from numpy import savetxt
 from numpy import random
 import trimesh
+import pyvista
 import networkx as nx
 from collision_color import *
+
 
 # global variable used to store the latest tried config of the arm in case path wasn't found
 goal_config_transit = None
@@ -582,19 +584,19 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             print("5. Poopie")
             object_num = int(input())
             if object_num == 1:
-                way = "../data/objects/donut.obj"
+                way = "../../data/objects/donut.obj"
                 scale = [1, 1, 1]
             elif object_num == 2:
-                way = "../data/objects/cursed_cube.obj"
+                way = "../../data/objects/cursed_cube.obj"
                 scale = [0.04, 0.04, 0.04]
             elif object_num == 3:
-                way = "../data/objects/Flashlight.obj"
+                way = "../../data/objects/Flashlight.obj"
                 scale = [0.03, 0.03, 0.03]
             elif object_num == 4:
-                way = "../data/objects/corona.obj"
+                way = "../../data/objects/corona.obj"
                 scale = [0.003, 0.003, 0.003]
             elif object_num == 5:
-                way = "../data/objects/poopie.obj"
+                way = "../../data/objects/poopie.obj"
                 scale = [0.03, 0.03, 0.03]
             print(" Choose the position of the object (type point in world coordinates ex. [1, 1, 1] or any letter to use prepared ones)")
             position_inp = input()
@@ -626,18 +628,12 @@ class GLPickAndPlacePlugin(GLPluginInterface):
 
 
 
-            new_mesh = world.loadRigidObject("../data/objects/block.obj")
+            new_mesh = world.loadRigidObject("../../data/objects/block.obj")
             #new_coll = world.loadRigidObject("../data/objects/block.obj")
             new_mesh.setName("my_mesh"+str(i))
-            #new_coll.setName("coll"+str(i))
             new_mesh.geometry().setTriangleMesh(m)
             new_mesh.setTransform([0, 1, 0, 0, 0, 1, 1, 0, 0], dest)
-            #new_coll.setTransform([1, 0, 0, 0, 1, 0, 0, 0, 1], vectorops.add(dest, [-0.02, 0.044, 0]))
             new_mesh.geometry().scale(scale[0], scale[1], scale[2])
-            #new_coll.geometry().scale(0.09, 0.002, 0.18)
-
-            #new_coll.appearance().setColor(1, 0, 0, 1)
-            #new_mesh.appearance().setColor(1, 0, 0, 1)
             color_arr = fill_colors(new_mesh, 6)
             trimeshes.append(own_mesh)
         vis.lock()
@@ -830,7 +826,7 @@ if __name__ == "__main__":
     world = WorldModel()
     collider = WorldCollider(world)
 
-    res = world.readFile("../Python/exercises/manipulation/grasp_attempt.xml")
+    res = world.readFile("../../Python/exercises/manipulation/grasp_attempt.xml")
     if not res: raise RuntimeError("Unable to load world file")
     vis.add("world", world)
     vis.setWindowTitle("Pick and place test, use a/b/c/d to select target")

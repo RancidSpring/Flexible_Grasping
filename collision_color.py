@@ -5,7 +5,6 @@ from klampt.vis.colorize import *
 from OpenGL.GL import *
 
 
-
 def fill_colors(object, face_number):
     """ Function that colorize special faces of the object base on the face_number parameter"""
     num_faces = object.geometry().numElements()
