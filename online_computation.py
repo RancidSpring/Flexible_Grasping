@@ -440,7 +440,6 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             self.change_object(4)
             self.object = self.hand.object
 
-
         if key == 'u':
             self.upload_constraints()
 

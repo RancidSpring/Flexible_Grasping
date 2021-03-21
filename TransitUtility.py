@@ -62,19 +62,19 @@ class TransitCSpace(CSpace):
                     cont_elem_obj_fing1 = world.rigidObject(o).geometry().contacts(world.robot(0).link(17).geometry(), 0, 0).elems1
 
                     for i in range(len(cont_elem_obj_fing1)):
-                        print("Contact of the object with the 1st finger is in the index ", cont_elem_obj_fing1[i])
+                        #print("Contact of the object with the 1st finger is in the index ", cont_elem_obj_fing1[i])
                         if 0 <= cont_elem_obj_fing1[i] < self.hand.object.geometry().numElements():
                             contact_color = self.hand.object.appearance().getElementColor(3, cont_elem_obj_fing1[i])
-                            print("Color of the contact face", contact_color)
+                            #print("Color of the contact face", contact_color)
                             if np.array_equal([1.0, 0.0, 0.0, 1.0], contact_color):
                                 return False
 
                     cont_elem_obj_fing2 = world.rigidObject(o).geometry().contacts(world.robot(0).link(19).geometry(), 0, 0).elems1
                     for i in range(len(cont_elem_obj_fing2)):
-                        print("Contact of the object with the 2st finger is in the index ", cont_elem_obj_fing2[i])
+                        #print("Contact of the object with the 2st finger is in the index ", cont_elem_obj_fing2[i])
                         if 0 <= cont_elem_obj_fing2[i] < self.hand.object.geometry().numElements():
                             contact_color = self.hand.object.appearance().getElementColor(3, cont_elem_obj_fing2[i])
-                            print("Color of the contact face", contact_color)
+                            #print("Color of the contact face", contact_color)
                             if np.array_equal([1.0, 0.0, 0.0, 1.0], contact_color):
                                 return False
                 else:

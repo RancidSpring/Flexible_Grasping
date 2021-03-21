@@ -109,7 +109,7 @@
 
 
 <!--     RIGID OBJECTS-->
-<!--    <rigidObject name="bar1" file="objects/objects/block_small.obj" scale="1.5 1.5 1.5" position="0.5 0.2 0.27" >-->
+<!--    <rigidObject name="donat" file="objects/objects/poopie.off" scale="1 1 1" position="1 1 1" >-->
 <!--            <display faceColor="1 1 0"/>-->
 <!--    </rigidObject>-->
 <!--&lt;!&ndash;    <rigidObject name="coll_check1" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.48 0.245 0.27" >&ndash;&gt;-->

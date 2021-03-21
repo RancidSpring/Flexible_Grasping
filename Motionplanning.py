@@ -35,7 +35,7 @@ def planTransit(world, objectIndex, hand):
         return None
 
     print("Trying to find pregrasp config...")
-    solution = hand.ikSolver(robot, cspace, obj.getTransform()[1])
+    solution = hand.ikSolver(robot, cspace, obj.getTransform()[1], False, False)
 
     if solution is not None and solution:
         qpregrasp, qpregrasparm = solution
@@ -44,7 +44,10 @@ def planTransit(world, objectIndex, hand):
 
     print("Planning transit motion to pregrasp config...")
     MotionPlan.setOptions(connectionThreshold=5.0, perturbationRadius=0.5)
+    # algorithm = "lazyrrg*"
     algorithm = "sbl"
+    # algorithm = "lazyprm*"
+
     planner = MotionPlan(cspace, algorithm)
     planner.setEndpoints(q0arm, qpregrasparm)
 
@@ -101,7 +104,7 @@ def planTransfer(world, objectIndex, hand, shift):
         return None
     start = time.time()
     solution = hand.ikSolver(robot, cspace,
-                                          vectorops.add(vectorops.add(obj.getTransform()[1], [0, 0, 0.0]), shift))
+                                          vectorops.add(vectorops.add(obj.getTransform()[1], [0, 0, 0.0]), shift), True, False)
     end = time.time()
     print("transfer time", end - start)
     if solution is not None:
@@ -110,7 +113,10 @@ def planTransfer(world, objectIndex, hand, shift):
         return None
     # plan the transfer path between q0arm and qungrasparm
     print("Planning transfer motion to ungrasp config...")
+    # algorithm = "lazyrrg*"
+    # algorithm = "lazyprm*"
     algorithm = "sbl"
+
     MotionPlan.setOptions(connectionThreshold=5.0, perturbationRadius=0.5)
     planner = MotionPlan(cspace, algorithm)
     planner.setEndpoints(q0arm, qungrasparm)
@@ -158,7 +164,11 @@ def planFree(world, hand, qtarget):
         return None
 
     print("Planning transit motion to target config...")
+    #algorithm = "lazyrrg*"
     algorithm = "sbl"
+
+    # algorithm = "lazyprm*"
+
     MotionPlan.setOptions(connectionThreshold=5.0, perturbationRadius=0.5)
     planner = MotionPlan(cspace, algorithm)
     planner.setEndpoints(q0arm, qtargetarm)

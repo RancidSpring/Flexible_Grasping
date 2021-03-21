@@ -1,7 +1,8 @@
 import trimesh
 import pyvista as pv
 import numpy as np
-
+from Py3DViewer import Trimesh
+import time
 
 def plot_subdivisions(mesh, a, b):
     display_args = dict(show_edges=True, color=True)
@@ -50,6 +51,10 @@ def plot_subdivisions(mesh, a, b):
 # plotter.show()
 
 
-arr = np.array([5, 2, 1, 5])
-index = arr.
-print(lol)
+# arr = np.array([5, 2, 1, 5])
+# index = arr.
+# print(lol)
+
+
+m = Trimesh('objects/objects/Donat.obj')
+m.show()

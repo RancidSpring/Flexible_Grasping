@@ -61,9 +61,7 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             self.hand.current_trimesh = self.trimeshes[self.object.index]
         else:
             self.object = None
-            # self.collis_object = None
             self.Tstart = None
-            self.Tstart_col = None
 
         # grasp transformation for object and collision area
         self.Tgrasp = None
@@ -77,7 +75,6 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         self.retractPath = None
         self.objectPath = None
         self.path = None
-        self.data = []
         self.force_denied = 0
 
     def display(self):
@@ -91,20 +88,17 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         # points connected by IKSolver
         glColor3f(0, 1, 0)
         glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[0]))
-        #glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[3]))
         glColor3f(0, 0, 1)
         glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[1]))
-        #glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[4]))
         glColor3f(1, 0, 0)
         glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[2]))
-        #glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[5]))
 
-        # glColor3f(0, 0, 1)
-        # glVertex3fv(kukaarm.world_pos[0])
-        # glColor3f(0, 1, 0)
-        # glVertex3fv(kukaarm.world_pos[1])
-        # glColor3f(1, 0, 0)
-        # glVertex3fv(kukaarm.world_pos[2])
+        glColor3f(0, 0, 1)
+        glVertex3fv(kukaarm.world_points[0])
+        glColor3f(0, 1, 0)
+        glVertex3fv(kukaarm.world_points[1])
+        glColor3f(1, 0, 0)
+        glVertex3fv(kukaarm.world_points[2])
         glColor3f(0.5, 0.5, 0.5)
         for i in range(3):
             glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.GripperPoint1s[i]))
@@ -113,14 +107,17 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         for i in self.hand.faces_geom:
             glVertex3fv(i.end)
 
+        # for i in self.world_points:
+        #     glVertex3fv(i)
+
         glColor3f(1, 0, 0.5)
         # for i in self.hand.faces_geom:
         #     glVertex3fv(i.face_center)
-        for i in self.hand.world_point1s:
-            glVertex3fv(i)
+        # for i in self.hand.world_point1s:
+        #     glVertex3fv(i)
 
-        for j in self.hand.world_point2s:
-            glVertex3fv(j)
+        # for j in self.hand.world_point2s:
+        #     glVertex3fv(j)
 
         # points on the terrain
         glColor3f(0.5, 0.3, 0)
@@ -138,9 +135,10 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         global goal_config_transit
         global goal_rotation_transfer
         h = 0.27
-        if key == 'a':
-            self.planTask(self.object.getTransform()[1], start_rot=False)
-            return True
+        targets = {'a': [0.5, 0.2, h], 'b': [0.5, -0.05, h], 'c': [-0.6, -0.05, h], 'd': [-0.6, 0.2, h], 'e': [-0.7, 0.2, h], 'f': [-0.7, 0.1, h], 'g': [-0.6, 0.1, h]}
+        if key in targets:
+            dest = targets[key]
+            return self.planTask(dest, start_rot=False)
 
         if key == 'n':
             print("Moving to next action")
@@ -153,7 +151,7 @@ class GLPickAndPlacePlugin(GLPluginInterface):
                 self.transitPath = None
                 self.transferPath = None
                 self.Tgrasp = None
-                self.hand.refresh_world_coord()
+                self.hand.refresh_world_points()
                 self.refresh()
 
         if key == '1':
@@ -166,41 +164,96 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             self.change_object(3)
 
         if key == 's':
-            self.save_to_csv()
+            vis.animate(("world", self.robot.getName()), self.path, endBehavior='halt')
+            vis.animate(("world", self.object.getName()), self.objectPath, endBehavior='halt')
 
         if key == 'l':
             self.data_lenght()
 
+    # def planTask(self, dest, start_rot):
+    #     global goal_config_transit
+    #     global goal_rotation_transfer
+    #     goal_config_transit = None
+    #     goal_rotation_transfer = None
+    #     while True:
+    #         # set object's starting position
+    #         self.object.setTransform(*self.Tstart)
+    #
+    #         # set robot's starting configuration
+    #         self.transitPath = None
+    #         self.robot.setConfig(self.qstart)
+    #         # self.hand.refresh_world_coord()
+    #         self.hand.refresh_world_points()
+    #
+    #         # plan transit path to grasp object
+    #         self.transitPath = planTransit(self.world, self.object.index, self.hand)
+    #         if self.transitPath is not None:
+    #             if self.transitPath is False:
+    #                 break
+    #             self.transit_uti()
+    #             if self.force_closure():
+    #                 for pos in self.hand.world_points:
+    #                     data_arr = vectorops.sub(pos, dest)
+    #                     self.data.append(data_arr)
+    #             else:
+    #                break
+    #         else:
+    #             break
+    #     return True
+
     def planTask(self, dest, start_rot):
-        global goal_config_transit
+        global trans_ind
         global goal_rotation_transfer
-        goal_config_transit = None
         goal_rotation_transfer = None
+        trans_ind = 0
+        self.Tstart = self.object.getTransform()
+        shift = vectorops.sub(dest, self.Tstart[1])
+        iteration = 0
         while True:
             # set object's starting position
             self.object.setTransform(*self.Tstart)
 
             # set robot's starting configuration
             self.transitPath = None
+            self.transferPath = None
+            self.retractPath = None
             self.robot.setConfig(self.qstart)
-            self.hand.refresh_world_coord()
-
+            self.hand.refresh_world_points()
             # plan transit path to grasp object
             self.transitPath = planTransit(self.world, self.object.index, self.hand)
-            if self.transitPath is not None:
-                if self.transitPath is False:
-                    break
+            if self.transitPath:
                 self.transit_uti()
-                if self.force_closure():
-                    for pos in self.hand.world_pos:
-                        data_arr = vectorops.sub(pos, dest)
-                        self.data.append(data_arr)
-                    self.data.append(self.hand.angles)
-                else:
-                   break
-            else:
+                # obstacle_queue = obstacle_query(self.object)
+                # for i in range(len(obstacle_queue)):
+                #     if i < 23:
+                #         print(obstacle_queue[i].d, asarray(obstacle_queue[i].cp1), asarray(obstacle_queue[i].cp2), world.terrain(i).getName())
+                # plan transfer path with rigidly grasped object
+                self.transferPath = planTransfer(self.world, self.object.index, self.hand, shift)
+                if self.transferPath:
+                    self.transfer_uti()
+
+                    # plan free path to retract arm
+                    self.retractPath = planFree(self.world, self.hand, self.qstart)
+
+            if self.transitPath and self.transferPath and self.retractPath:
+                # build trajectory for the arm
+                milestones = self.transitPath + self.transferPath + self.retractPath
+                self.path = RobotTrajectory(self.robot, range(len(milestones)), milestones)
+
+                # build trajectory for the object and collision area
+                self.build_object_trajectory(0.05)
+
+                # animate the given task
+                self.task_animation()
+                return True
+
+            # end condition
+            iteration += 1
+            if iteration > 1000:
                 break
-        return True
+
+        self.animate_none()
+        return False
 
     def transit_uti(self):
         self.Tgrasp = graspTransform(self.robot, self.hand, self.transitPath[-1], self.Tstart)
@@ -236,10 +289,14 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         vis.animate(("world", self.object.getName()), None, endBehavior='halt')
 
     def change_object(self, obj_index):
-        self.object = world.rigidObject(obj_index)
-        self.Tstart = self.object.getTransform()
-        self.hand.change_the_goal(obj_index)
-        self.hand.refresh_world_coord()
+        try:
+            self.object = world.rigidObject(obj_index)
+            self.Tstart = self.object.getTransform()
+            self.hand.change_the_goal(obj_index)
+            self.hand.refresh_world_points()
+        except:
+            print("Can't change the object: object with such index doesn't exist")
+            pass
         return True
 
     def force_closure(self):
@@ -257,17 +314,6 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             self.force_denied += 1
             return False
 
-    def save_to_csv(self):
-        cube_grasp_utility = self.data
-        print(cube_grasp_utility)
-        print(asarray(cube_grasp_utility))
-        savetxt(save_directory, asarray(cube_grasp_utility), delimiter=',')
-        return True
-
-    def data_lenght(self):
-        print("Dataset consists of ", len(self.data)/5, "elements")
-        return
-
     def upload_constraints(self):
         trimeshes = []
         scale = [1, 1, 1]
@@ -282,6 +328,7 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             print("3. Flashlight")
             print("4. Corona Beer")
             print("5. Poopie")
+            print("6. Bulb")
             object_num = int(input())
             if object_num == 1:
                 way = "objects/objects/donut.obj"
@@ -298,6 +345,15 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             elif object_num == 5:
                 way = "objects/objects/poopie.obj"
                 scale = [0.03, 0.03, 0.03]
+            elif object_num == 6:
+                way = "objects/objects/bulb.obj"
+                scale = [0.05, 0.05, 0.05]
+            elif object_num == 7:
+                way = "objects/objects/Bulb Pack/Bulbs.obj"
+                scale = [0.05, 0.05, 0.05]
+            elif object_num == 8:
+                way = "objects/objects/Light Bulb/Light Bulb.obj"
+                scale = [0.05, 0.05, 0.05]
             print(
                 "Choose the position of the object (type point in world coordinates ex. [1, 1, 1] or any letter to use prepared ones)")
             position_inp = input()
@@ -316,13 +372,48 @@ class GLPickAndPlacePlugin(GLPluginInterface):
                     dest = [0.5, i + 0.15, 0.27]
 
             own_mesh = trimesh.exchange.load.load(way)
-            filled = trimesh.repair.fill_holes(own_mesh)
+            # filled = trimesh.repair.fill_holes(own_mesh)
             third_coloumn = np.multiply(3, np.ones((len(own_mesh.faces), 1)))
             vertices = own_mesh.vertices
             faces = np.hstack((third_coloumn, own_mesh.faces))
             faces = np.hstack(faces).astype(np.int16)
             surf = pv.PolyData(vertices, faces)
-            upgraded_mesh = pv.PolyData.subdivide(surf, 1, subfilter='linear')
+            print("1. Increase faces number")
+            print("2. Reduce faces number")
+            print("3. Leave the object as it is")
+            try:
+                face_mode = int(input())
+            except ValueError:
+                face_mode = 3
+
+            if face_mode == 1:
+                print("How much new faces have to be created?")
+                print("1. Coefficient of subdivision is 1. Each face is divided into 4 new ones")
+                print("2. Coefficient of subdivision is 2. Each face is divided into 16 new ones")
+                try:
+                    subdivision_coeff = int(input())
+                except ValueError:
+                    print("Wrong input type, input has to be integer")
+                    print("Leaving mesh as it is")
+                    subdivision_coeff = 0
+                upgraded_mesh = pv.PolyData.subdivide(surf, subdivision_coeff, subfilter='linear')
+
+            elif face_mode == 2:
+                print("Enter float in range [0, 1] which is how much the mesh is reduced in per cent")
+                try:
+                    decimate_coeff = float(input())
+                except ValueError:
+                    print("Wrong input type, input has to be float")
+                    print("Leaving mesh as it is")
+                    decimate_coeff = 0
+                if decimate_coeff < 0 or decimate_coeff > 1:
+                    print("Wrong range of the input")
+                    print("Leaving mesh as it is")
+                    decimate_coeff = 0
+                upgraded_mesh = surf.decimate(target_reduction=decimate_coeff, volume_preservation=True)
+
+            else:
+                upgraded_mesh = surf
 
             faces = upgraded_mesh.faces
             verts = upgraded_mesh.points.astype(np.double)
@@ -334,6 +425,7 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             for j in np.ndarray.flatten(verts):
                 m.vertices.append(j)
 
+            print("There are ", len(np.ndarray.flatten(faces)), " faces in this mesh")
             for j in np.ndarray.flatten(faces):
                 m.indices.append(int(j))
 
@@ -346,8 +438,8 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             new_mesh.setTransform(R, dest)
             new_mesh.geometry().scale(scale[0], scale[1], scale[2])
 
-            color_arr = fill_colors(new_mesh, 10)
-            trimeshes.append(own_mesh)
+            # color_arr = fill_colors(new_mesh, 10)
+            trimeshes.append(new_mesh)
             verts = np.array(m.vertices).reshape(len(m.vertices) // 3, 3)
             verti_arr = []
 
@@ -364,14 +456,16 @@ class GLPickAndPlacePlugin(GLPluginInterface):
                 self.hand.faces_geom.append(face_geom)
 
             self.hand.object = world.rigidObject(0)
-            self.hand.init_world_pos()
+            self.hand.init_world_points()
 
         vis.lock()
         vis.remove("world")
         vis.add("world", self.world)
-        vis.colorize.colorize(new_mesh, color_arr)
-        #vis.colorize.colorize(new_mesh, 'index', 'random', 'faces')
+        #vis.colorize.colorize(new_mesh, color_arr)
+        for mesh in trimeshes:
+            vis.colorize.colorize(mesh, 'index', 'random', 'faces')
         vis.unlock()
+        print("TRIMESHES", trimeshes)
         return trimeshes
 
 
