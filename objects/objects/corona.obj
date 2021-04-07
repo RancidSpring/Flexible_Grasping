@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 13.10.2014 13:18:12
 
-mtllib Corona.mtl
+mtllib corona.mtl
 
 #
 # object Botella

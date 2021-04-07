@@ -13,7 +13,7 @@ from collision_color import *
 import itertools
 from MeshGeometry import FaceGeom
 from TransformFunc import *
-
+import heapq
 
 goal_rotation_transfer = None
 goal_config_transfer = None
@@ -50,21 +50,37 @@ class Hand:
         self.inside_mesh = [0, 0, 0]
         self.current_trimesh = None
         self.faces_geom = []
-        self.world_point1s = []
-        self.world_point2s = []
-        self.world_points = []
+        self.transit_points = []
+        self.transfer_points = []
+        self.grasped_face1 = None
+        self.grasped_face2 = None
+        self.heap = []
 
     def init_local_pos(self):
         self.local_pos.append((0.01, 0.01, 0.15))
         self.local_pos.append((-0.01, 0.01, 0.15))
         self.local_pos.append((0, -0.01, 0.15))
+
+        self.local_pos.append((0, 0.01, 0.15))
+        self.local_pos.append((0, -0.01, 0.15))
+        # self.local_pos.append((0.01, 0, 0.15))
+        # self.local_pos.append((-0.01, 0, 0.15))
         return
 
-    def init_world_points(self):
-        self.world_points.append(vectorops.add(self.object.getTransform()[1], [0.01, 0.01, 0]))
-        self.world_points.append(vectorops.add(self.object.getTransform()[1], [-0.01, 0.01, 0]))
-        self.world_points.append(vectorops.add(self.object.getTransform()[1], [0, -0.01, 0]))
-        #self.world_pos.append(vectorops.add(self.object.getTransform()[1], [0, 0, 0.2]))
+    def init_transit_points(self):
+        # self.world_points.append(vectorops.add(self.object.getTransform()[1], [0.01, 0.01, 0]))
+        # self.world_points.append(vectorops.add(self.object.getTransform()[1], [-0.01, 0.01, 0]))
+        # self.world_points.append(vectorops.add(self.object.getTransform()[1], [0, -0.01, 0]))
+        self.transit_points.append(vectorops.add(self.object.getTransform()[1], [0.01, 0, 0]))
+        self.transit_points.append(vectorops.add(self.object.getTransform()[1], [-0.01, 0, 0]))
+        return
+
+    def init_transfer_points(self):
+        self.transfer_points.append(vectorops.add(self.object.getTransform()[1], [0.01, 0.01, 0]))
+        self.transfer_points.append(vectorops.add(self.object.getTransform()[1], [-0.01, 0.01, 0]))
+        self.transfer_points.append(vectorops.add(self.object.getTransform()[1], [0, -0.01, 0]))
+        # self.world_points.append(vectorops.add(self.object.getTransform()[1], [0, 0.01, 0]))
+        # self.world_points.append(vectorops.add(self.object.getTransform()[1], [0, -0.01, 0]))
         return
 
     def open(self, q, amount=1.0):
@@ -92,7 +108,7 @@ class Hand:
         else:
             solution = self.goal_rotation_transfer(robot, cspace, obj_pt, rot)
 
-        if solution is not None:
+        if solution:
             grasp, grasparm = solution
             return grasp, grasparm
         else:
@@ -119,7 +135,7 @@ class Hand:
 
         start_angle = [0, 0, 0]
 
-        world_position_matrix = [self.world_points[0], self.world_points[1], self.world_points[2]]
+        world_position_matrix = [self.transfer_points[0], self.transfer_points[1], self.transfer_points[2]]
 
         # iterate through the best angles to put the object
         for i in range(i_old, 4):
@@ -171,26 +187,50 @@ class Hand:
 
     def goal_transform_transit(self, robot, cspace):
 
-        for n1, n2 in itertools.combinations(self.faces_geom, 2):
-            start = time.time()
-            print("VECTORS ARE", n1.normal_vec, n2.normal_vec)
-            cross_product = np.cross(n1.normal_vec, n2.normal_vec)
-            print("CROSS PRODUCT", cross_product)
-            cross_norm = np.linalg.norm(cross_product)
-            if isclose(cross_norm, 0, abs_tol=1e-3):
-                # set the goal to match local points on the arm with the object points
-                center_of_mass = np.multiply(np.add(n1.face_center, n2.face_center), 0.5)
-                self.create_world_pos(center_of_mass)
-                goal = ik.objective(robot.link("tool0"),
-                                    local=[self.local_pos[0], self.local_pos[1], self.local_pos[2]],
-                                    world=[self.world_points[1], self.world_points[0], self.world_points[2]])
-                res = self.solve(robot, cspace, goal)
-                if res is not None:
-                    return res
-                else:
-                    print("Couldn't find grasp")
-            end = time.time()
-            print("iteration time", end - start)
+        # for n1, n2 in itertools.combinations(self.faces_geom, 2):
+        #     print("VECTORS ARE", n1.normal_vec, n2.normal_vec)
+        #     dot_product = np.dot(n1.normal_vec, n2.normal_vec)
+        #     print("DOT_PRODUCT", dot_product)
+        #     if dot_product >= 0:
+        #         continue
+        #     cross_product = np.cross(n1.normal_vec, n2.normal_vec)
+        #     print("CROSS PRODUCT", cross_product)
+        #     cross_norm = np.linalg.norm(cross_product)
+        #     if isclose(cross_norm, 0, abs_tol=1e-3):
+        #         # set the goal to match local points on the arm with the object points
+        #         center_of_mass = np.multiply(np.add(n1.face_center, n2.face_center), 0.5)
+        #         self.create_transit_pos(n1.face_center, n2.face_center, center_of_mass)
+        #         goal = ik.objective(robot.link("tool0"),
+        #                             local=[self.local_pos[3], self.local_pos[4]],
+        #                             world=[self.transit_points[0], self.transit_points[1]])
+        #         res = self.solve(robot, cspace, goal)
+        #         if res is not None:
+        #             self.grasped_face1 = n1.ind
+        #             self.grasped_face2 = n2.ind
+        #             return res
+        #         else:
+        #             print("Couldn't find grasp")
+        cnt = 0
+        while True:
+            print("HEAP LENGTH", len(self.heap))
+            try:
+                center_of_mass, n1, n2 = heapq.heappop(self.heap)[1]
+            except IndexError:
+                break
+            cnt += 1
+            self.create_transit_pos(n1.face_center, n2.face_center, center_of_mass)
+            goal = ik.objective(robot.link("tool0"),
+                                local=[self.local_pos[3], self.local_pos[4]],
+                                world=[self.transit_points[0], self.transit_points[1]])
+            res = self.solve(robot, cspace, goal)
+            if res is not None:
+                self.grasped_face1 = n1.ind
+                self.grasped_face2 = n2.ind
+                print("Solved within first ", cnt, "iterations")
+                return res
+            else:
+                print("Couldn't find grasp")
+
         print("Solution to the transit problem hasn't been found")
         return False
 
@@ -219,18 +259,13 @@ class Hand:
                 # print("Grasp solve failed")
                 pass
 
-    def refresh_world_coord(self):
-        self.world_pos[0] = vectorops.add(self.object.getTransform()[1], [0.01, 0.01, 0])
-        self.world_pos[1] = vectorops.add(self.object.getTransform()[1], [-0.01, 0.01, 0])
-        self.world_pos[2] = vectorops.add(self.object.getTransform()[1], [0, -0.01, 0])
-        self.world_pos[3] = vectorops.add(self.object.getTransform()[1], [0, 0, 0.2])
-        return 0
-
     def refresh_world_points(self):
-        self.world_points[0] = vectorops.add(self.object.getTransform()[1], [0.01, 0.01, 0])
-        self.world_points[1] = vectorops.add(self.object.getTransform()[1], [-0.01, 0.01, 0])
-        self.world_points[2] = vectorops.add(self.object.getTransform()[1], [0, -0.01, 0])
-        #self.world_pos[3] = vectorops.add(self.object.getTransform()[1], [0, 0, 0.2])
+        self.transfer_points[0] = vectorops.add(self.object.getTransform()[1], [0.01, 0.01, 0])
+        self.transfer_points[1] = vectorops.add(self.object.getTransform()[1], [-0.01, 0.01, 0])
+        self.transfer_points[2] = vectorops.add(self.object.getTransform()[1], [0, -0.01, 0])
+
+        # self.transit_points[0] = vectorops.add(self.object.getTransform()[1], [0, 0.01, 0])
+        # self.transit_points[1] = vectorops.add(self.object.getTransform()[1], [0, -0.01, 0])
         return 0
 
     def change_the_goal(self, obj_index):
@@ -246,13 +281,21 @@ class Hand:
     def force_closure(self, contact_points):
         return self.object.contact.ForceClosure(contact_points)
 
-    def create_world_pos(self, face_cntr1):
-        self.world_points = []
-        self.world_points.append(vectorops.add(face_cntr1, [0.01, 0.01, 0]))
-        self.world_points.append(vectorops.add(face_cntr1, [-0.01, 0.01, 0]))
-        self.world_points.append(vectorops.add(face_cntr1, [0, -0.01, 0]))
+    def create_transit_pos(self, face_cntr1, face_cntr2, centroid):
+        vec1 = face_cntr1 - centroid
+        vec1_norm = np.linalg.norm(vec1)
+        vec1_length = 0.01/vec1_norm
+        vec1 = np.multiply(vec1, vec1_length)
+
+        vec2 = face_cntr2 - centroid
+        vec2_norm = np.linalg.norm(vec2)
+        vec2_length = 0.01/vec2_norm
+        vec2 = np.multiply(vec2, vec2_length)
+
+        # self.transit_points[0] = vectorops.add(face_cntr1, [0, 0.01, 0])
+        # self.transit_points[1] = vectorops.add(face_cntr1, [0, -0.01, 0])
+
+        self.transit_points[0] = vectorops.add(centroid, vec1)
+        self.transit_points[1] = vectorops.add(centroid, vec2)
 
 
-
-def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
-    return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)

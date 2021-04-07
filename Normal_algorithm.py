@@ -28,6 +28,11 @@ from TransferUtility import TransferCSpace
 from TransitUtility import TransitCSpace
 from TransformFunc import *
 from Motionplanning import *
+import heapq
+import json
+from tkinter import *
+from Tk_Wrapper import TkWrapper
+
 
 
 class Globals:
@@ -38,14 +43,15 @@ class Globals:
 
 
 class GLPickAndPlacePlugin(GLPluginInterface):
-    def __init__(self, world):
+    def __init__(self, world, wrapper):
 
         GLPluginInterface.__init__(self)
         self.world = world
 
         # initialize the kuka arm
         self.hand = Hand(self.world, 'kuka')
-        self.trimeshes = self.upload_constraints()
+        self.trimeshes = []
+        self.upload_constraints()
         self.robot = world.robot(0)
 
         # start robot config
@@ -86,23 +92,36 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         glBegin(GL_POINTS)
 
         # points connected by IKSolver
-        glColor3f(0, 1, 0)
-        glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[0]))
-        glColor3f(0, 0, 1)
-        glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[1]))
-        glColor3f(1, 0, 0)
-        glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[2]))
 
-        glColor3f(0, 0, 1)
-        glVertex3fv(kukaarm.world_points[0])
-        glColor3f(0, 1, 0)
-        glVertex3fv(kukaarm.world_points[1])
-        glColor3f(1, 0, 0)
-        glVertex3fv(kukaarm.world_points[2])
-        glColor3f(0.5, 0.5, 0.5)
-        for i in range(3):
-            glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.GripperPoint1s[i]))
-            glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.GripperPoint2s[i]))
+        # transfer points
+        # glColor3f(0, 1, 0)
+        # glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[0]))
+        # glColor3f(0, 0, 1)
+        # glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[1]))
+        # glColor3f(1, 0, 0)
+        # glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[2]))
+        #
+        # glColor3f(0, 0, 1)
+        # glVertex3fv(kukaarm.transfer_points[0])
+        # glColor3f(0, 1, 0)
+        # glVertex3fv(kukaarm.transfer_points[1])
+        # glColor3f(1, 0, 0)
+        # glVertex3fv(kukaarm.transfer_points[2])
+
+        # transit points
+        try:
+            glColor3f(1, 1, 1)
+            glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[3]))
+            glColor3f(1, 1, 1)
+            glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.local_pos[4]))
+
+
+            glColor3f(1, 0, 0)
+            glVertex3fv(kukaarm.transit_points[0])
+            glColor3f(1, 0, 0)
+            glVertex3fv(kukaarm.transit_points[1])
+        except:
+            pass
 
         for i in self.hand.faces_geom:
             glVertex3fv(i.end)
@@ -120,14 +139,14 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         #     glVertex3fv(j)
 
         # points on the terrain
-        glColor3f(0.5, 0.3, 0)
-        glVertex3fv([0.5, 0.2, 0.265])
-        glColor3f(0.5, 0.3, 1)
-        glVertex3fv([0.5, -0.05, 0.265])
-        glColor3f(0.5, 1, 0.5)
-        glVertex3fv([-0.6, -0.05, 0.265])
-        glColor3f(0.5, 0.3, 0)
-        glVertex3fv([-0.6, 0.2, 0.265])
+        # glColor3f(0.5, 0.3, 0)
+        # glVertex3fv([0.5, 0.2, 0.27])
+        # glColor3f(0.5, 0.3, 1)
+        # glVertex3fv([0.5, -0.05, 0.27])
+        # glColor3f(0.5, 1, 0.5)
+        # glVertex3fv([-0.6, -0.05, 0.27])
+        # glColor3f(0.5, 0.3, 0)
+        # glVertex3fv([-0.6, 0.2, 0.27])
         glEnd()
         glEnable(GL_DEPTH_TEST)
 
@@ -249,13 +268,18 @@ class GLPickAndPlacePlugin(GLPluginInterface):
 
             # end condition
             iteration += 1
-            if iteration > 1000:
+            if iteration > 10:
                 break
 
         self.animate_none()
         return False
 
     def transit_uti(self):
+        # color_arr = fill_colors_neutral(self.hand.object, self.hand.grasped_face1, self.hand.grasped_face2)
+        # vis.lock()
+        # vis.colorize.colorize(self.hand.object, color_arr)
+        # vis.unlock()
+
         self.Tgrasp = graspTransform(self.robot, self.hand, self.transitPath[-1], self.Tstart)
         self.robot.setConfig(self.transitPath[-1])
         return 0
@@ -294,6 +318,8 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             self.Tstart = self.object.getTransform()
             self.hand.change_the_goal(obj_index)
             self.hand.refresh_world_points()
+
+            self.compute_mesh_geometry(obj_index)
         except:
             print("Can't change the object: object with such index doesn't exist")
             pass
@@ -315,7 +341,6 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             return False
 
     def upload_constraints(self):
-        trimeshes = []
         scale = [1, 1, 1]
         print("Please, enter the number of constraints to build")
         constraints_num = int(input())
@@ -337,7 +362,7 @@ class GLPickAndPlacePlugin(GLPluginInterface):
                 way = "objects/objects/cursed_cube.obj"
                 scale = [0.04, 0.04, 0.04]
             elif object_num == 3:
-                way = "objects/objects/Flashlight.obj"
+                way = "objects/objects/Flashlight2.obj"
                 scale = [0.03, 0.03, 0.03]
             elif object_num == 4:
                 way = "objects/objects/corona.obj"
@@ -352,24 +377,30 @@ class GLPickAndPlacePlugin(GLPluginInterface):
                 way = "objects/objects/Bulb Pack/Bulbs.obj"
                 scale = [0.05, 0.05, 0.05]
             elif object_num == 8:
-                way = "objects/objects/Light Bulb/Light Bulb.obj"
-                scale = [0.05, 0.05, 0.05]
-            print(
-                "Choose the position of the object (type point in world coordinates ex. [1, 1, 1] or any letter to use prepared ones)")
+                # way = "objects/objects/Light Bulb/Light Bulb.obj"
+                way = "robots/kuka/links_models/arm_links/link_3.off"
+                # scale = [0.05, 0.05, 0.05]
+                scale = [1, 1, 1]
+
+            elif object_num == 9:
+                way = "robots/kuka/links_models/gripper3fing/gripper_body_smol#1.off"
+                scale = [1, 1, 1]
+            print("Choose the position of the object (type point in world coordinates ex. [1, 1, 1] or any letter to use prepared ones)")
             position_inp = input()
-            if type(position_inp) is list:
-                dest = position_inp
-            else:
-                if i == 0:
-                    dest = [0.5, 0.2, 0.27]
-                elif i == 1:
-                    dest = [0.5, 0, 0.27]
-                elif i == 2:
-                    dest = [0.2, 0.4, 0.07]
-                elif i == 3:
-                    dest = [-0.4, -0.4, 0.07]
-                else:
-                    dest = [0.5, i + 0.15, 0.27]
+            if type(position_inp) is str:
+                try:
+                    dest = json.loads(position_inp)
+                except json.decoder.JSONDecodeError:
+                    if i == 0:
+                        dest = [0.5, 0.2, 0.27]
+                    elif i == 1:
+                        dest = [0.5, 0, 0.27]
+                    elif i == 2:
+                        dest = [0.2, 0.4, 0.07]
+                    elif i == 3:
+                        dest = [-0.4, -0.4, 0.07]
+                    else:
+                        dest = [0.5, i + 0.15, 0.27]
 
             own_mesh = trimesh.exchange.load.load(way)
             # filled = trimesh.repair.fill_holes(own_mesh)
@@ -378,6 +409,8 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             faces = np.hstack((third_coloumn, own_mesh.faces))
             faces = np.hstack(faces).astype(np.int16)
             surf = pv.PolyData(vertices, faces)
+            print("There are ", len(own_mesh.faces), "faces in this object's mesh")
+            print("Additional mesh upgrade:")
             print("1. Increase faces number")
             print("2. Reduce faces number")
             print("3. Leave the object as it is")
@@ -418,8 +451,8 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             faces = upgraded_mesh.faces
             verts = upgraded_mesh.points.astype(np.double)
 
-            for i in range(len(upgraded_mesh.faces)//4):
-                faces = np.delete(faces, 3*i)
+            for k in range(len(upgraded_mesh.faces)//4):
+                faces = np.delete(faces, 3*k)
 
             m = TriangleMesh()
             for j in np.ndarray.flatten(verts):
@@ -429,57 +462,91 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             for j in np.ndarray.flatten(faces):
                 m.indices.append(int(j))
 
-
             new_mesh = world.loadRigidObject("objects/objects/block.obj")
             new_mesh.setName("my_mesh" + str(i))
             new_mesh.geometry().setTriangleMesh(m)
             R = [0, 1, 0, 0, 0, 1, 1, 0, 0]
-            rot_matrix = so3.matrix(R)
             new_mesh.setTransform(R, dest)
             new_mesh.geometry().scale(scale[0], scale[1], scale[2])
 
             # color_arr = fill_colors(new_mesh, 10)
-            trimeshes.append(new_mesh)
-            verts = np.array(m.vertices).reshape(len(m.vertices) // 3, 3)
-            verti_arr = []
+            self.trimeshes.append((m, scale))
 
-            for vert in verts:
-                vert = np.matmul(rot_matrix, vert)
-                vert = np.add(np.multiply(vert, scale), dest)
-                verti_arr.append(vert)
+            self.compute_mesh_geometry(new_mesh.index) # compute normal vectors and create an array containing Face_Geom
 
-            indeces = np.array(m.indices, dtype=np.int32).reshape((len(m.indices) // 3, 3))
-            for ind in indeces:
-                current_normal = calculate_normal(verti_arr[ind[0]], verti_arr[ind[1]], verti_arr[ind[2]])
-                center_of_face = np.mean([verti_arr[ind[0]], verti_arr[ind[1]], verti_arr[ind[2]]], axis=0)
-                face_geom = FaceGeom(current_normal, center_of_face)
-                self.hand.faces_geom.append(face_geom)
-
-            self.hand.object = world.rigidObject(0)
-            self.hand.init_world_points()
+            self.hand.object = world.rigidObject(i)
+            self.hand.init_transfer_points()
+            self.hand.init_transit_points()
 
         vis.lock()
         vis.remove("world")
         vis.add("world", self.world)
         #vis.colorize.colorize(new_mesh, color_arr)
-        for mesh in trimeshes:
-            vis.colorize.colorize(mesh, 'index', 'random', 'faces')
+        for i in range(len(self.trimeshes)):
+            vis.colorize.colorize(world.rigidObject(i), 'index', 'random', 'faces')
         vis.unlock()
-        print("TRIMESHES", trimeshes)
-        return trimeshes
+        return self.trimeshes
+
+    def compute_mesh_geometry(self, obj_ind):
+        self.hand.faces_geom = []
+        m, scale = self.trimeshes[obj_ind]
+        R = world.rigidObject(obj_ind).getTransform()[0]
+        rot_matrix = so3.matrix(R)
+        dest = world.rigidObject(obj_ind).getTransform()[1]
+        verts = np.array(m.vertices, dtype=np.double).reshape(len(m.vertices) // 3, 3)
+        verti_arr = []
+
+        for vert in verts:
+            vert = np.matmul(rot_matrix, vert)
+            vert = np.add(np.multiply(vert, scale), dest)
+            verti_arr.append(vert)
+
+        indeces = np.array(m.indices, dtype=np.int32).reshape((len(m.indices) // 3, 3))
+        index_cnt = 0
+        for ind in indeces:
+            current_normal = calculate_normal(verti_arr[ind[0]], verti_arr[ind[1]], verti_arr[ind[2]])
+            center_of_face = np.mean([verti_arr[ind[0]], verti_arr[ind[1]], verti_arr[ind[2]]], axis=0)
+            face_geom = FaceGeom(current_normal, center_of_face, index_cnt)
+            self.hand.faces_geom.append(face_geom)
+            index_cnt += 1
+
+        self.create_heap()
+
+    def create_heap(self):
+        self.hand.heap = []
+        cnt = 0
+        for n1, n2 in itertools.combinations(self.hand.faces_geom, 2):
+            cnt += 1
+            dot_product = np.dot(n1.normal_vec, n2.normal_vec)
+            if dot_product >= 0:
+                continue
+            cross_product = np.cross(n1.normal_vec, n2.normal_vec)
+            # print("CROSS PRODUCT", cross_product)
+            cross_norm = np.linalg.norm(cross_product)
+            if isclose(cross_norm, 0, abs_tol=1e-1):
+                center_of_mass = np.multiply(np.add(n1.face_center, n2.face_center), 0.5)
+                distance = np.linalg.norm(np.subtract(n2.face_center, n1.face_center))
+                self.hand.heap.append((distance, (list(center_of_mass), n1, n2)))  # add pairs to heap
+        print(self.hand.heap)
+        heapq.heapify(self.hand.heap)  # heap sort by minimum distance
+        print("CNT ITERATIONS", cnt)
+        return
 
 
 if __name__ == "__main__":
     world = WorldModel()
     collider = WorldCollider(world)
+    wrapper = TkWrapper()
+    wrapper.main_func()
 
     res = world.readFile("worlds/grasp_attempt.xml")
     if not res: raise RuntimeError("Unable to load world file")
     vis.add("world", world)
     vis.setWindowTitle("Pick and place test, use a/b/c/d to select target")
-    vis.pushPlugin(GLPickAndPlacePlugin(world))
-    vis.setColor(('world', 'kuka', world.robot(0).link(17).getName()), 0, 255, 0, a=1.0)
-    vis.setColor(('world', 'kuka', world.robot(0).link(19).getName()), 0, 255, 0, a=1.0)
+    vis.pushPlugin(GLPickAndPlacePlugin(world, wrapper))
+    # vis.setColor(('world', 'kuka', world.robot(0).link(17).getName()), 0, 255, 0, a=1.0)
+    # vis.setColor(('world', 'kuka', world.robot(0).link(19).getName()), 0, 255, 0, a=1.0)
+
     vis.show()
 
     while vis.shown():

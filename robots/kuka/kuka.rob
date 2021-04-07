@@ -33,7 +33,7 @@ qmin	-inf -inf -inf -inf -inf -inf 0 -2.9668 -2.0942 -2.9668 -2.0942 -2.9668 -2.
 
 qmax	inf inf inf inf inf inf 0 2.9668 2.0942 2.9668 2.0942 2.9668 2.0942 3.0541 0 0 1.09519 1.09519 -0.0479966 1.09519 
 
-geometry	"" "" "" "" "" "../kukaarm/base_link.off" "" "../kukaarm/link_1.off" "../kukaarm/link_2.off" "../kukaarm/link_3.off" "../kukaarm/link_4.off" "../kukaarm/link_5.off" "../kukaarm/link_6.off" "../kukaarm/link_7.off" "" "Link_0.off" "Link_1.off" "Link_2.off" "Link_3.off" "Link_4.off" 
+geometry	"" "" "" "" "" "links_models/arm_links/base_link.off" "" "links_models/arm_links/link_1.off" "links_models/arm_links/link_2.off" "links_models/arm_links/link_3.off" "links_models/arm_links/link_4.off" "links_models/arm_links/link_5.off" "links_models/arm_links/link_6.off" "links_models/arm_links/link_7.off" "" "links_models/gripper2fing/grLink_0.off" "links_models/gripper2fing/grLink_1.off" "links_models/gripper2fing/grLink_2.off" "links_models/gripper2fing/grLink_3.off" "links_models/gripper2fing/grLink_4.off" 
 
 mass	0 0 0 0 0 0.0001 0.0001 4 4.5 2.5 2.6 3.4 3.4 0.35 0 1 0.5 0.2 0.5 0.2 #3.94781 4.50275 2.4552 2.61155 3.41 3.38795 0.35432 0 1 0.5 #0.2 0.5 0.2 
 

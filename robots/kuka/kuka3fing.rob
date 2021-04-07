@@ -1,0 +1,123 @@
+links	"base0" "base1" "base2" "base3" "base4" "base_link" "base" "link_1" "link_2" "link_3" "link_4" "link_5" "link_6" "link_7" "gripper_body" "fing1" "fing2" "fing3"
+
+parents	-1 0 1 2 3 4 5 -1 7 8 9 10 11 12 13 14 14 14
+
+axis	1 0 0	0 1 0	0 0 1	0 0 1	0 1 0	1 0 0	0 0 1	0 0 1	0 1 0	0 0 1	0 -1 0	0 0 1	0 1 0	0 0 1	1 0 0	0 0 1	0 0 1	0 1 0	
+
+jointtype	p p p r r r r r r r r r r r r p p p 
+
+Tparent	1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	-0.00043624 0 0.36 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0.00043624 0 0.42 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0 0 0.4 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+0 1 0	1 0 0	0 0 1	0 0 0.126 \
+1 0 0	0 1 0	0 0 1	0 0 0 \
+1 0 0	0 1 0	0 0 1	0.046 0.01 0 \
+1 0 0	0 0 1	0 -1 0	0.09 0 0 \
+
+
+q	 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+qmin	-inf -inf -inf -inf -inf -inf 0 -2.9668 -2.0942 -2.9668 -2.0942 -2.9668 -2.0942 -3.0541 0 0 -inf -inf
+
+qmax	inf inf inf inf inf inf 0 2.9668 2.0942 2.9668 2.0942 2.9668 2.0942 3.0541 0 0 inf inf
+
+geometry	"" "" "" "" "" "links_models/arm_links/base_link.off" "" "links_models/arm_links/link_1.off" "links_models/arm_links/link_2.off" "links_models/arm_links/link_3.off" "links_models/arm_links/link_4.off" "links_models/arm_links/link_5.off" "links_models/arm_links/link_6.off" "links_models/arm_links/link_7.off" "links_models/gripper3fing/gripper_body_small_low.off" "links_models/gripper3fing/fing1_small.off" "links_models/gripper3fing/fing2_small.off" "links_models/gripper3fing/fing3_small.off"
+
+mass	0 0 0 0 0 0.0001 0.0001 4 4.5 2.5 2.6 3.4 3.4 0.35 0 1 0.5 0.2
+
+com	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0 0 0	0.0303572 0.000250357 -2.56483e-06	0.030659 0.0286641 -0.000600291	0.00324518 1.53195e-05 0.00217044	
+
+inertia	0 0 0 0 0 0 0 0 0	0 0 0 0 0 0 0 0 0	0 0 0 0 0 0 0 0 0	0 0 0 0 0 0 0 0 0	0 0 0 0 0 0 0 0 0	0.1 0 0 0 0.1 0 0 0 0.1	0.1 0 0 0 0.1 0 0 0 0.1	0.0455 0 0 0 0.0454 1e-03 0 1e-03 0.0029	0.0032 0 0 0 0.001 0 0 0 0.0042	0.0223 -5e-03 7e-03 -5e-03 0.0219 7e-03 7e-03 7e-03 0.0073	0.3844 0.0088 -0.0112 0.0088 0.1144 -0.0111 -0.0112 -0.0111 0.4988	0.0277 -1e-03 1e-03 -1e-03 0.0284 -0 1e-03 -0 0.0012	0.005 -5e-03 -3e-03 -5e-03 0.0281 -4e-03 -3e-03 -4e-03 0.0232	0.0795 0.0022 -0.0029 0.0022 0.1089 -0.0029 -0.0029 -0.0029 0.0294	0.1 0 0 0 0.1 0 0 0 0.1	0.0123405 -0.00129586 8.13991e-05 -0.00129586 0.201837 -3.08168e-06 8.13991e-06 -3.08168e-06 0.269847	0.0287436 -0.00139219 -0.00199805 -0.00139219 0.0704323 -7.4727e-03 -0.00199805 -7.4727e-03 0.0699058	0.00459249 3.35886e-05 0.0024899 3.35886e-05 0.00782779 -2.95135e-05 0.0024899 -2.95135e-05 0.00579756	
+
+torquemax	0 0 0 0 0 0 inf 0 320 320 176 176 110 40 40 1 1 0.5
+
+velmax	inf inf inf inf inf inf 0 1.4834 1.4834 1.7452 1.3089 2.2688 2.356 2.356 0 0 1.5708 1.5708 
+
+accmax	inf inf inf inf inf inf 0 100 100 100 100 100 100 100 0 0 inf inf
+
+noselfcollision	5 7	
+noselfcollision	12 15	
+noselfcollision	13 15	
+
+
+
+
+joint normal 5 -1
+joint weld 6
+joint normal 7
+joint normal 8
+joint normal 9
+joint normal 10
+joint normal 11
+joint normal 12
+joint normal 13
+joint weld 14
+joint weld 15
+joint normal 16
+joint normal 17
+#joint normal 18
+
+
+
+driver normal 7
+driver normal 8
+driver normal 9
+driver normal 10
+driver normal 11
+driver normal 12
+driver normal 13
+driver normal 16
+driver normal 17
+driver normal 15
+
+
+#servoP	40000 50000 20000 15000 10000 2000 1000 1000 1000 1000 1000
+#servoI	100 100 100 100 100 40 20 20 20 20 20
+#servoD	1000 2000 1000 700 400 50 20 20 20 20 20
+
+
+noselfcollision 5 7
+noselfcollision 0 1
+noselfcollision 1 2 
+noselfcollision 2 3 
+noselfcollision 3 4
+noselfcollision 4 5
+noselfcollision 5 6
+noselfcollision 6 7
+noselfcollision 7 8
+noselfcollision 8 9
+noselfcollision 9 10
+noselfcollision 10 11
+noselfcollision 11 12
+noselfcollision 12 13
+noselfcollision 13 14
+noselfcollision 14 15
+noselfcollision 15 16
+noselfcollision 16 17
+
+
+noselfcollision 12 15
+noselfcollision 13 15
+noselfcollision 4 14
+noselfcollision 5 15
+noselfcollision 6 13
+noselfcollision 4 13
+noselfcollision 4 15
+noselfcollision 5 14
+noselfcollision 5 15
+noselfcollision 6 16
+
+dryFriction	5 5 3 1 0.5 0.1 1 1 1 1
+viscousFriction	100 100 70 50 40 5 10 10 10 10
+

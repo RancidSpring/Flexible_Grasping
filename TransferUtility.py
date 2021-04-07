@@ -57,13 +57,13 @@ class TransferCSpace(CSpace):
         grasped_object = self.hand.object.index
 
         # test robot-object collisions
-        # for o in range(world.numRigidObjects()):
-        #     if any(collider.robotObjectCollisions(self.robot.index, o)):
-        #         if o == grasped_object:
-        #             world.rigidObject(o).appearance().setSilhouette(1, 0, 1, 0, 1)
-        #         else:
-        #             print("ROBOT-OBJECT COLLISION", o, grasped_object)
-        #             return False
+        for o in range(world.numRigidObjects()):
+            if any(collider.robotObjectCollisions(self.robot.index, o)):
+                if o == grasped_object:
+                    world.rigidObject(o).appearance().setSilhouette(1, 0, 1, 0, 1)
+                else:
+                    print("ROBOT-OBJECT COLLISION", o, grasped_object)
+                    return False
 
         # test object-object collisions
         for o in range(world.numRigidObjects()):

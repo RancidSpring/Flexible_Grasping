@@ -59,23 +59,27 @@ class TransitCSpace(CSpace):
                 if o == self.obj_index:
                     world.rigidObject(o).appearance().setSilhouette(1, 0, 1, 0, 1)
 
+                    avoid_contact = world.rigidObject(o).geometry().contacts(world.robot(0).link(15).geometry(), 0, 0).elems1
+                    avoid_len = len(avoid_contact)
+                    if avoid_len > 0:
+                        print("Collision with 15th link")
+                        return False
+
                     cont_elem_obj_fing1 = world.rigidObject(o).geometry().contacts(world.robot(0).link(17).geometry(), 0, 0).elems1
 
                     for i in range(len(cont_elem_obj_fing1)):
-                        #print("Contact of the object with the 1st finger is in the index ", cont_elem_obj_fing1[i])
                         if 0 <= cont_elem_obj_fing1[i] < self.hand.object.geometry().numElements():
                             contact_color = self.hand.object.appearance().getElementColor(3, cont_elem_obj_fing1[i])
-                            #print("Color of the contact face", contact_color)
                             if np.array_equal([1.0, 0.0, 0.0, 1.0], contact_color):
+                                print("Fragile area detected: 1st finger")
                                 return False
 
                     cont_elem_obj_fing2 = world.rigidObject(o).geometry().contacts(world.robot(0).link(19).geometry(), 0, 0).elems1
                     for i in range(len(cont_elem_obj_fing2)):
-                        #print("Contact of the object with the 2st finger is in the index ", cont_elem_obj_fing2[i])
                         if 0 <= cont_elem_obj_fing2[i] < self.hand.object.geometry().numElements():
                             contact_color = self.hand.object.appearance().getElementColor(3, cont_elem_obj_fing2[i])
-                            #print("Color of the contact face", contact_color)
                             if np.array_equal([1.0, 0.0, 0.0, 1.0], contact_color):
+                                print("Fragile area detected: 2nd finger")
                                 return False
                 else:
                     return False
@@ -83,6 +87,7 @@ class TransitCSpace(CSpace):
         # test robot-terrain collisions
         for o in range(world.numTerrains()):
             if any(collider.robotTerrainCollisions(self.robot.index, o)):
+                print("Robot-terrain collision")
                 return False
 
         # test robot self-collisions and paint collided links red

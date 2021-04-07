@@ -1,0 +1,22 @@
+<sensors>
+  <JointPositionSensor name="encoders" indices="6 7 8 9 10 11 12 13 14"/>
+  <DriverTorqueSensor name="current_sensors" indices="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14"/>
+  <ForceTorqueSensor name="Base_ForceSensor" link="6" hasForce="0 0 1" hasTorque="1 1 1"/>
+  <ForceTorqueSensor name="Link1_ForceSensor" link="7" hasForce="0 0 1" hasTorque="1 1 0"/>
+  <ForceTorqueSensor name="Link2_ForceSensor" link="8" hasForce="0 0 1" hasTorque="1 1 0"/>
+  <ForceTorqueSensor name="Link3_ForceSensor" link="9" hasForce="0 0 1" hasTorque="1 1 0"/>
+  <ForceTorqueSensor name="Link4_ForceSensor" link="10" hasForce="0 0 1" hasTorque="1 1 0"/>
+  <ForceTorqueSensor name="Link5_ForceSensor" link="11" hasForce="0 0 1" hasTorque="1 1 0"/>
+  <ForceTorqueSensor name="Link6_ForceSensor" link="12" hasForce="0 0 1" hasTorque="1 1 0"/>
+  <ForceTorqueSensor name="Link7_ForceSensor" link="13" hasForce="0 0 1" hasTorque="1 1 0"/>
+  <ForceTorqueSensor name="Link8_ForceSensor" link="14" hasForce="0 0 1" hasTorque="1 1 0"/>
+  <FilteredSensor name="Base_ForceSensor_Filtered" sensor="Base_ForceSensor" smoothing="0.8" />
+  <FilteredSensor name="Link1_ForceSensor_Filtered" sensor="Link1_ForceSensor" smoothing="0.8" />
+  <FilteredSensor name="Link2_ForceSensor_Filtered" sensor="Link2_ForceSensor" smoothing="0.8" />
+  <FilteredSensor name="Link3_ForceSensor_Filtered" sensor="Link3_ForceSensor" smoothing="0.8" />
+  <FilteredSensor name="Link4_ForceSensor_Filtered" sensor="Link4_ForceSensor" smoothing="0.8" />
+  <FilteredSensor name="Link5_ForceSensor_Filtered" sensor="Link5_ForceSensor" smoothing="0.8" />
+  <FilteredSensor name="Link6_ForceSensor_Filtered" sensor="Link6_ForceSensor" smoothing="0.8" />
+  <FilteredSensor name="Link7_ForceSensor_Filtered" sensor="Link7_ForceSensor" smoothing="0.8" />
+  <FilteredSensor name="Link8_ForceSensor_Filtered" sensor="Link8_ForceSensor" smoothing="0.8" />
+</sensors>

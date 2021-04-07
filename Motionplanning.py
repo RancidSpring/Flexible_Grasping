@@ -45,8 +45,8 @@ def planTransit(world, objectIndex, hand):
     print("Planning transit motion to pregrasp config...")
     MotionPlan.setOptions(connectionThreshold=5.0, perturbationRadius=0.5)
     # algorithm = "lazyrrg*"
-    algorithm = "sbl"
-    # algorithm = "lazyprm*"
+    # algorithm = "sbl"
+    algorithm = "lazyprm*"
 
     planner = MotionPlan(cspace, algorithm)
     planner.setEndpoints(q0arm, qpregrasparm)
@@ -114,8 +114,8 @@ def planTransfer(world, objectIndex, hand, shift):
     # plan the transfer path between q0arm and qungrasparm
     print("Planning transfer motion to ungrasp config...")
     # algorithm = "lazyrrg*"
-    # algorithm = "lazyprm*"
-    algorithm = "sbl"
+    algorithm = "lazyprm*"
+    # algorithm = "sbl"
 
     MotionPlan.setOptions(connectionThreshold=5.0, perturbationRadius=0.5)
     planner = MotionPlan(cspace, algorithm)
@@ -165,9 +165,9 @@ def planFree(world, hand, qtarget):
 
     print("Planning transit motion to target config...")
     #algorithm = "lazyrrg*"
-    algorithm = "sbl"
+    # algorithm = "sbl"
 
-    # algorithm = "lazyprm*"
+    algorithm = "lazyprm*"
 
     MotionPlan.setOptions(connectionThreshold=5.0, perturbationRadius=0.5)
     planner = MotionPlan(cspace, algorithm)

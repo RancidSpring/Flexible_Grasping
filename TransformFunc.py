@@ -27,7 +27,6 @@ def graspedObjectTransform(robot, hand, qrobot0, Tobj0, qrobot):
     return se3.mul(Thand, Tgrasp)
 
 
-
 def euler_angle_to_rotation(ea, convention='zyx'):
     """Converts an euler angle representation to a rotation matrix.
     Can use arbitrary axes specified by the convention
@@ -49,3 +48,7 @@ def calculate_normal(v1, v2, v3):
     normal = cross/(np.linalg.norm(cross))
     print(normal)
     return normal
+
+
+def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
+    return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)

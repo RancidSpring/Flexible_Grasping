@@ -1,8 +1,14 @@
 import trimesh
-import pyvista as pv
+# import pyvista as pv
 import numpy as np
-from Py3DViewer import Trimesh
+# from Py3DViewer import Trimesh
 import time
+from pygel3d import hmesh, gl_display as gl
+from pygel3d import jupyter_display as jd
+from tkinter import *
+import os
+import sys, string, os
+
 
 def plot_subdivisions(mesh, a, b):
     display_args = dict(show_edges=True, color=True)
@@ -56,5 +62,45 @@ def plot_subdivisions(mesh, a, b):
 # print(lol)
 
 
-m = Trimesh('objects/objects/Donat.obj')
-m.show()
+# m = Trimesh('objects/objects/Donat.obj')
+# m.show()
+
+way = "objects/objects/Flashlight2.obj"
+# f = open(way, "r")
+# resolver = trimesh.resolvers.FilePathResolver.get(mtl)
+# print(dir(resolver))
+# own_mesh = trimesh.exchange.obj.load_obj(f, resolver)
+# print(dir(trimesh.visual.color.ColorVisuals))
+# own_mesh = trimesh.load(way)
+#
+# # np.set_printoptions(threshold=sys.maxsize)
+# visuals = trimesh.visual.color.ColorVisuals(list(own_mesh.geometry.items())[1][1])
+# print(visuals.face_colors)
+
+file_name = 'objects/objects/Flashlight2.obj'
+# resolver = trimesh.visual.resolvers.FilePathResolver(file_name)
+# with open(file_name, 'r') as f:
+#     kwargs = trimesh.exchange.obj.load_obj(f, resolver=resolver)
+# print(kwargs)
+# scene = trimesh.exchange.load.load_kwargs(kwargs)
+# visuals = trimesh.visual.color.ColorVisuals(list(scene.geometry.items())[1][1])
+# print(visuals.face_colors)
+
+
+mesh = trimesh.load(file_name)
+mesh.show()
+visuals = list(mesh.geometry.items())[1][1].visual.to_color().face_colors
+# visuals = mesh.visual
+print(mesh)
+# visuals = trimesh.visual.color.ColorVisuals(list(list(kwargs["geometry"].items())[1][1]))
+# print(visuals.face_colors)
+# list(kwargs["geometry"].items())[1][1]
+# import pywavefront
+# scene = pywavefront.Wavefront('objects/objects/Flashlight2.obj')
+# print(scene)
+
+# m = hmesh.load("objects/objects/bulb.obj")
+# viewer = gl.Viewer()
+# viewer.display(m, mode='w')
+# jd.set_export_mode(True)
+# jd.display(m, smooth=False)
