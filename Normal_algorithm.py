@@ -47,11 +47,12 @@ class GLPickAndPlacePlugin(GLPluginInterface):
 
         GLPluginInterface.__init__(self)
         self.world = world
+        self.tk_wrapper = wrapper
 
         # initialize the kuka arm
         self.hand = Hand(self.world, 'kuka')
         self.trimeshes = []
-        self.upload_constraints()
+        self.upload_constraints_GUI()
         self.robot = world.robot(0)
 
         # start robot config
@@ -362,7 +363,7 @@ class GLPickAndPlacePlugin(GLPluginInterface):
                 way = "objects/objects/cursed_cube.obj"
                 scale = [0.04, 0.04, 0.04]
             elif object_num == 3:
-                way = "objects/objects/Flashlight2.obj"
+                way = "objects/objects/Flashlight.obj"
                 scale = [0.03, 0.03, 0.03]
             elif object_num == 4:
                 way = "objects/objects/corona.obj"
@@ -487,7 +488,78 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         vis.unlock()
         return self.trimeshes
 
+    def upload_constraints_GUI(self):
+        i = 0
+        for obj in self.tk_wrapper.object_load:
+            way = obj.way
+            scale = obj.scale
+            if i == 0:
+                dest = [0.5, 0.2, 0.27]
+            elif i == 1:
+                dest = [0.5, 0, 0.27]
+            elif i == 2:
+                dest = [0.2, 0.4, 0.07]
+            elif i == 3:
+                dest = [-0.4, -0.4, 0.07]
+            else:
+                dest = [0.5, i + 0.15, 0.27]
+
+            own_mesh = trimesh.exchange.load.load(way)
+            # filled = trimesh.repair.fill_holes(own_mesh)
+            third_coloumn = np.multiply(3, np.ones((len(own_mesh.faces), 1)))
+            vertices = own_mesh.vertices
+            faces = np.hstack((third_coloumn, own_mesh.faces))
+            faces = np.hstack(faces).astype(np.int16)
+            surf = pv.PolyData(vertices, faces)
+            if obj.upgrade_coef == 1:
+                upgraded_mesh = pv.PolyData.subdivide(surf, obj.subdivision_coeff, subfilter='linear')
+
+            elif obj.upgrade_coef == 2:
+                upgraded_mesh = surf.decimate(target_reduction=obj.decimate_coeff, volume_preservation=True)
+
+            else:
+                upgraded_mesh = surf
+
+            faces = upgraded_mesh.faces
+            verts = upgraded_mesh.points.astype(np.double)
+
+            for k in range(len(upgraded_mesh.faces)//4):
+                faces = np.delete(faces, 3*k)
+
+            m = TriangleMesh()
+            for j in np.ndarray.flatten(verts):
+                m.vertices.append(j)
+
+            for j in np.ndarray.flatten(faces):
+                m.indices.append(int(j))
+
+            new_mesh = world.loadRigidObject("objects/objects/block.obj")
+            new_mesh.setName("my_mesh" + str(i))
+            new_mesh.geometry().setTriangleMesh(m)
+            R = [0, 1, 0, 0, 0, 1, 1, 0, 0]
+            new_mesh.setTransform(R, dest)
+            new_mesh.geometry().scale(scale[0], scale[1], scale[2])
+
+            # color_arr = fill_colors(new_mesh, 10)
+            self.trimeshes.append((m, scale))
+
+            self.compute_mesh_geometry(new_mesh.index) # compute normal vectors and create an array containing Face_Geom
+
+            self.hand.object = world.rigidObject(i)
+            self.hand.init_transfer_points()
+            self.hand.init_transit_points()
+            i += 1
+        vis.lock()
+        vis.remove("world")
+        vis.add("world", self.world)
+        # vis.colorize.colorize(new_mesh, color_arr)
+        for i in range(len(self.trimeshes)):
+            vis.colorize.colorize(world.rigidObject(i), 'index', 'random', 'faces')
+        vis.unlock()
+        return self.trimeshes
+
     def compute_mesh_geometry(self, obj_ind):
+        start = time.time()
         self.hand.faces_geom = []
         m, scale = self.trimeshes[obj_ind]
         R = world.rigidObject(obj_ind).getTransform()[0]
@@ -509,10 +581,13 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             face_geom = FaceGeom(current_normal, center_of_face, index_cnt)
             self.hand.faces_geom.append(face_geom)
             index_cnt += 1
+        end = time.time()
+        print("Computing vertices and normals time", end-start)
 
         self.create_heap()
 
     def create_heap(self):
+        start = time.time()
         self.hand.heap = []
         cnt = 0
         for n1, n2 in itertools.combinations(self.hand.faces_geom, 2):
@@ -523,27 +598,29 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             cross_product = np.cross(n1.normal_vec, n2.normal_vec)
             # print("CROSS PRODUCT", cross_product)
             cross_norm = np.linalg.norm(cross_product)
-            if isclose(cross_norm, 0, abs_tol=1e-1):
+            if isclose(cross_norm, 0, abs_tol=1e-9):
                 center_of_mass = np.multiply(np.add(n1.face_center, n2.face_center), 0.5)
                 distance = np.linalg.norm(np.subtract(n2.face_center, n1.face_center))
                 self.hand.heap.append((distance, (list(center_of_mass), n1, n2)))  # add pairs to heap
-        print(self.hand.heap)
         heapq.heapify(self.hand.heap)  # heap sort by minimum distance
         print("CNT ITERATIONS", cnt)
+        end = time.time()
+        print("Create Heap time", end-start)
+        print("Heap length", len(self.hand.heap))
         return
 
 
 if __name__ == "__main__":
     world = WorldModel()
     collider = WorldCollider(world)
-    wrapper = TkWrapper()
-    wrapper.main_func()
+    wrapp = TkWrapper()
+    wrapp.main_func()
 
     res = world.readFile("worlds/grasp_attempt.xml")
     if not res: raise RuntimeError("Unable to load world file")
     vis.add("world", world)
     vis.setWindowTitle("Pick and place test, use a/b/c/d to select target")
-    vis.pushPlugin(GLPickAndPlacePlugin(world, wrapper))
+    vis.pushPlugin(GLPickAndPlacePlugin(world, wrapp))
     # vis.setColor(('world', 'kuka', world.robot(0).link(17).getName()), 0, 255, 0, a=1.0)
     # vis.setColor(('world', 'kuka', world.robot(0).link(19).getName()), 0, 255, 0, a=1.0)
 

@@ -87,11 +87,11 @@ file_name = 'objects/objects/Flashlight2.obj'
 # print(visuals.face_colors)
 
 
-mesh = trimesh.load(file_name)
-mesh.show()
-visuals = list(mesh.geometry.items())[1][1].visual.to_color().face_colors
+# mesh = trimesh.load(file_name)
+# mesh.show()
+# visuals = list(mesh.geometry.items())[1][1].visual.to_color().face_colors
 # visuals = mesh.visual
-print(mesh)
+# print(mesh)
 # visuals = trimesh.visual.color.ColorVisuals(list(list(kwargs["geometry"].items())[1][1]))
 # print(visuals.face_colors)
 # list(kwargs["geometry"].items())[1][1]

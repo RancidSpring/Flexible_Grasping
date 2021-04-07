@@ -2,17 +2,26 @@ from tkinter import *
 from PIL import ImageTk, Image
 import trimesh
 import os
+import copy
 
-
-
+class Object:
+    def __init__(self, idx, way, scale=None):
+        if scale is None:
+            scale = [1, 1, 1]
+        self.position = "basic"
+        self.idx = idx
+        self.upgrade_coef = 3
+        self.way = way
+        self.mesh_size = 0
+        self.subdivision_coeff = 0
+        self.decimate_coeff = 0
+        self.scale = scale
 
 class TkWrapper:
     def __init__(self):
         self.cube_way = "objects/objects/cursed_cube.obj"
         self.fls_way = "objects/objects/Flashlight.obj"
         self.bulb_way = "objects/objects/bulb.obj"
-        self.mesh_size = []
-        self.find_mesh_size()
         self.root = Tk()
         self.root.title("Algorithm's GUI startup window")
         self.objects_num = 0
@@ -22,7 +31,12 @@ class TkWrapper:
         self.cube_id = 2
         self.fls_id = 3
         self.bulb_id = 6
-
+        self.face_mode = 3
+        self.Cube = Object(self.cube_id, self.cube_way, [0.04, 0.04, 0.04])
+        self.Flashlight = Object(self.fls_id, self.fls_way, [0.03, 0.03, 0.03])
+        self.Bulb = Object(self.bulb_id, self.bulb_way, [0.05, 0.05, 0.05])
+        self.find_mesh_size()
+        self.current_obj = self.Cube
 
     # def myClick1(self, entry):
     #     try:
@@ -48,10 +62,9 @@ class TkWrapper:
         self.cube_len = len(trimesh.exchange.load.load(self.cube_way).faces)
         self.fls_len = len(trimesh.exchange.load.load(self.fls_way).faces)
         self.bulb_len = len(trimesh.exchange.load.load(self.bulb_way).faces)
-        self.mesh_size.append(self.cube_len)
-        self.mesh_size.append(self.fls_len)
-        self.mesh_size.append(self.bulb_len)
-
+        self.Cube.mesh_size = self.cube_len
+        self.Flashlight.mesh_size = self.fls_len
+        self.Bulb.mesh_size = self.bulb_len
 
     def myClick2(self, entry1, entry2, entry3):
         try:
@@ -92,7 +105,7 @@ class TkWrapper:
             myLabel.grid(row=5, column=1)
 
     def valuecheck(self, value):
-        face_num = self.mesh_size[self.current_idx]
+        face_num = self.current_obj.mesh_size
         valuelist = [face_num, face_num * 4, face_num * (4 ** 2), face_num * (4 ** 3)]
         newvalue = min(valuelist, key=lambda x: abs(x - float(value)))
         self.horizontal.set(newvalue)
@@ -102,17 +115,16 @@ class TkWrapper:
         for label in self.root.grid_slaves():
             if int(label.grid_info()["row"]) == 12 and int(label.grid_info()["column"]) == 1:
                 label.grid_forget()
-        self.subdivision_coeff = new_num
-        self.decimate_coeff = 0
-        myLabel = Label(self.root, text="Number of faces increased 4**"+str(self.subdivision_coeff)+" times", fg="green")
+        self.current_obj.subdivision_coeff = new_num
+        myLabel = Label(self.root, text="Number of faces increased 4**"+str(self.current_obj.subdivision_coeff)+" times", fg="green")
         myLabel.grid(row=12, column=1)
 
     def reduce_per_cent(self, new_num):
         for label in self.root.grid_slaves():
             if int(label.grid_info()["row"]) == 12 and int(label.grid_info()["column"]) == 1:
                 label.grid_forget()
-        self.decimate_coeff = 1 - (new_num / self.mesh_size[self.current_idx])
-        myLabel = Label(self.root, text=str(self.decimate_coeff) + " per cent is reduced", fg="green")
+        self.current_obj.decimate_coeff = 1 - (new_num / self.current_obj.mesh_size)
+        myLabel = Label(self.root, text=str(self.current_obj.decimate_coeff) + " per cent is reduced", fg="green")
         myLabel.grid(row=12, column=1)
 
     def leave_the_mesh(self):
@@ -124,41 +136,41 @@ class TkWrapper:
             if 12 >= int(label.grid_info()["row"]) >= 10 and int(label.grid_info()["column"]) >= 1:
                 label.grid_forget()
         mylabel = Label(self.root, text="The face mode is chosen", fg="green").grid(row=12, column=1)
-        self.face_mode = value
-        if self.face_mode == 1:
+        self.current_obj.upgrade_coef = value
+        if self.current_obj.upgrade_coef == 1:
             value = IntVar()
-            face_num = self.mesh_size[self.current_idx]
+            face_num = self.current_obj.mesh_size
             valuelist = [face_num, face_num * 4, face_num * (4 ** 2), face_num * (4 ** 3)]
             self.horizontal = Scale(self.root, from_=min(valuelist), to=max(valuelist), variable=value, command=self.valuecheck, orient="horizontal")
             self.horizontal.grid(row=10, column=1)
             myButton2 = Button(self.root, text="Confirm", command=lambda: self.increase_faces(valuelist.index(value.get())), padx=50, pady=5)
             myButton2.grid(row=10, column=2)
-        elif self.face_mode == 2:
+        elif self.current_obj.upgrade_coef == 2:
             value = IntVar()
-            horizontal = Scale(self.root, from_=self.mesh_size[self.current_idx], to=0, orient="horizontal", variable=value)
+            horizontal = Scale(self.root, from_=self.current_obj.mesh_size, to=0, orient="horizontal", variable=value)
             horizontal.grid(row=10, column=1)
-            horizontal.set(self.mesh_size[self.current_idx])
+            horizontal.set(self.current_obj.mesh_size)
             myButton2 = Button(self.root, text="Confirm", command=lambda: self.reduce_per_cent(value.get()), padx=50, pady=5)
             myButton2.grid(row=10, column=2)
-        elif self.face_mode == 3:
+        elif self.current_obj.upgrade_coef == 3:
             for label in self.root.grid_slaves():
-                if int(label.grid_info()["row"]) >= 10 and int(label.grid_info()["column"]) >= 1:
+                if 12 >= int(label.grid_info()["row"]) >= 10 and int(label.grid_info()["column"]) >= 1:
                     label.grid_forget()
             myButton2 = Button(self.root, text="Confirm", command=lambda: self.leave_the_mesh(), padx=50, pady=5)
             myButton2.grid(row=10, column=2)
 
     def change_window_drop(self, clicked):
         for label in self.root.grid_slaves():
-            if int(label.grid_info()["row"]) > 8 and int(label.grid_info()["column"]) >= 0:
+            if 12 >= int(label.grid_info()["row"]) > 8 and int(label.grid_info()["column"]) >= 0:
                 label.grid_forget()
         if clicked.get() == "Cube":
-            self.current_idx = 0
+            self.current_obj = self.Cube
         elif clicked.get() == "Flashlight":
-            self.current_idx = 1
+            self.current_obj = self.Flashlight
         elif clicked.get() == "Light Bulb":
-            self.current_idx = 2
+            self.current_obj = self.Bulb
 
-        mylabel1 = Label(self.root, text=str(clicked.get())+" currently consists of "+str(self.mesh_size[self.current_idx])+" faces").grid(row=8, column=1)
+        mylabel1 = Label(self.root, text=str(clicked.get())+" currently consists of "+str(self.current_obj.mesh_size)+" faces").grid(row=8, column=1)
 
         r = IntVar()
         Radiobutton(self.root, text="Increase the number of faces", variable=r, value=1, command=lambda: self.facemode(r.get())).grid(row=9, column=0)
@@ -168,6 +180,20 @@ class TkWrapper:
     def run_meshlab(self):
         # os.system("/snap/meshlab/36/AppRun")
         os.system("~/blender/blender-2.83.4-linux64/blender")
+
+    def start_the_program(self):
+        self.object_load = []
+        for i in self.object_arr:
+            if i == self.cube_id:
+                self.object_load.append(copy.deepcopy(self.Cube))
+            if i == self.fls_id:
+                self.object_load.append(copy.deepcopy(self.Flashlight))
+            if i == self.bulb_id:
+                self.object_load.append(copy.deepcopy(self.Bulb))
+
+        self.root.destroy()
+        print("zhopa")
+
     def main_func(self):
         self.root.option_add('*Font', 'Times 19')
 
@@ -229,10 +255,14 @@ class TkWrapper:
         # THIRD STEP
 
         lbl3 = Label(self.root, text="3) Additional Mesh Upgrade")
-        lbl3.grid(row=8, column=1)
+        lbl3.grid(row=13, column=1)
 
         myButton3 = Button(self.root, text="Confirm", command=lambda: self.run_meshlab(), padx=50, pady=5)
-        myButton3.grid(row=9, column=1)
+        myButton3.grid(row=14, column=1)
+
+        # FINAL STEP
+
+        Button(self.root, text="Startup the Program", command=self.start_the_program).grid(row=15, column=1)
 
         self.root.mainloop()
 

@@ -35,7 +35,6 @@ class Hand:
         self.gripperIndex = 14
         self.link = 14
         self.world = world
-        #self.object = world.rigidObject(0)
         self.object = None
         self.local_pos = []
         self.init_local_pos()
@@ -55,6 +54,8 @@ class Hand:
         self.grasped_face1 = None
         self.grasped_face2 = None
         self.heap = []
+        self.start_angle = []
+        self.indeces = [0, 0, 0]
 
     def init_local_pos(self):
         self.local_pos.append((0.01, 0.01, 0.15))
@@ -88,17 +89,6 @@ class Hand:
         if amount = 1 or closed if amount = 0"""
         return openhand(q, self.hand, amount)
 
-    # def ikSolver(self, robot, cspace, obj_pt):
-    #     """Returns an IK solver that places the hand center at obj_pt with
-    #     the palm oriented along obj_axis"""
-    #     solution = self.goal_transform_transit(robot, cspace, obj_pt)
-    #
-    #     if solution is not None and solution is not False:
-    #         grasp, grasparm = solution
-    #         return grasp, grasparm
-    #     else:
-    #         return solution
-
     def ikSolver(self, robot, cspace, obj_pt, transfer, rot):
         """Returns an IK solver that places the hand center at obj_pt with
         the palm oriented along obj_axis"""
@@ -106,7 +96,8 @@ class Hand:
         if not transfer:
             solution = self.goal_transform_transit(robot, cspace)
         else:
-            solution = self.goal_rotation_transfer(robot, cspace, obj_pt, rot)
+            solution = self.goal_definition_transfer(robot, cspace, obj_pt)
+            # solution = self.goal_rotation_transfer(robot, cspace, obj_pt, rot)
 
         if solution:
             grasp, grasparm = solution
@@ -124,7 +115,6 @@ class Hand:
         :return: returns the configurations grasp and grasparm,  or None
         """
         global goal_rotation_transfer
-        global start_angle
 
         i_old, j_old, k_old = 0, 0, 0
 
@@ -133,7 +123,6 @@ class Hand:
             j_old = goal_rotation_transfer[1]
             k_old = goal_rotation_transfer[2]
 
-        start_angle = [0, 0, 0]
 
         world_position_matrix = [self.transfer_points[0], self.transfer_points[1], self.transfer_points[2]]
 
@@ -185,8 +174,37 @@ class Hand:
         print("Solution to the transfer problem hasn't been found")
         return None
 
-    def goal_transform_transit(self, robot, cspace):
+    def goal_definition_transfer(self, robot, cspace, obj_pt):
+        Tobj0 = self.object.getTransform()
+        Thand0 = robot.link(self.link).getTransform()
+        t0 = vectorops.sub(Thand0[1], Tobj0[1])
+        for i in range(self.indeces[0], 4):
+            for j in range(self.indeces[1], 4):
+                for k in range(self.indeces[2], 4):
+                    angle = (i * math.pi / 2, j * math.pi / 2, k * math.pi / 2)
+                    rot_matrix = euler_angle_to_rotation(angle)
+                    rotObj = so3.mul(rot_matrix, Thand0[0])
+                    t = so3.apply(rot_matrix, t0)
+                    goal = ik.objective(robot.link("tool0"),
+                                        R=rotObj,
+                                        t=vectorops.add(obj_pt, t))
+                    res = self.solve(robot, cspace, goal)
+                    if res is not None:
+                        k += 1
+                        if k >= 4:
+                            j += 1
+                            k = 0
+                            if j >= 4:
+                                i += 1
+                                j = 0
+                        self.indeces = [i, j, k]
+                        return res
+                print("Solution to the transfer problem hasn't been found")
+                return None
+        return
 
+    def goal_transform_transit(self, robot, cspace):
+        start = time.time()
         # for n1, n2 in itertools.combinations(self.faces_geom, 2):
         #     print("VECTORS ARE", n1.normal_vec, n2.normal_vec)
         #     dot_product = np.dot(n1.normal_vec, n2.normal_vec)
@@ -224,9 +242,10 @@ class Hand:
                                 world=[self.transit_points[0], self.transit_points[1]])
             res = self.solve(robot, cspace, goal)
             if res is not None:
+                end = time.time()
                 self.grasped_face1 = n1.ind
                 self.grasped_face2 = n2.ind
-                print("Solved within first ", cnt, "iterations")
+                print("Solved within first ", cnt, "iterations,", " soving time: ", start - end)
                 return res
             else:
                 print("Couldn't find grasp")

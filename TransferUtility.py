@@ -62,13 +62,13 @@ class TransferCSpace(CSpace):
                 if o == grasped_object:
                     world.rigidObject(o).appearance().setSilhouette(1, 0, 1, 0, 1)
                 else:
-                    print("ROBOT-OBJECT COLLISION", o, grasped_object)
+                    # print("ROBOT-OBJECT COLLISION", o, grasped_object)
                     return False
 
         # test object-object collisions
         for o in range(world.numRigidObjects()):
             if any(collider.objectObjectCollisions(o, None)):
-                print("OBJECT-OBJECT COLLISION")
+                # print("OBJECT-OBJECT COLLISION")
                 return False
 
         # if collider.objectObjectCollisions(0, 2):
@@ -78,13 +78,13 @@ class TransferCSpace(CSpace):
         # test object-terrain collisions
         for o in range(world.numRigidObjects()):
             if any(collider.objectTerrainCollisions(o, None)):
-                print("OBJECT-TERRAIN COLLISION")
+                # print("OBJECT-TERRAIN COLLISION")
                 return False
 
         # test robot-terrain collisions
         for o in range(world.numTerrains()):
             if any(collider.robotTerrainCollisions(self.robot.index, o)):
-                print("ROBOT-TERRAIN COLLISION")
+                # print("ROBOT-TERRAIN COLLISION")
                 return False
 
         # test robot self-collisions

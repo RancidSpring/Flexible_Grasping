@@ -47,7 +47,7 @@ class Hand:
         self.gripperIndex = 14
         self.link = 14
         self.world = world
-        self.object = None # world.rigidObject(0)
+        self.object = None
         self.localPosition1 = (0.01, 0.01, 0.15)
         self.localPosition2 = (-0.01, 0.01, 0.15)
         self.localPosition3 = (0, -0.01, 0.15)
@@ -67,6 +67,7 @@ class Hand:
         self.grip_config = self.subrobot.setConfig([0, 1, 0, -1, 0])
         self.lines = loadtxt(filename, comments="#", delimiter=",", unpack=False)
         self.heu_dict = None
+        self.indeces = [0, 0, 0]
 
     def open(self, q, amount=1.0):
         """Computes a configuration identical to q but with hand open
@@ -80,7 +81,8 @@ class Hand:
         if not transfer:
             solution = self.solve_transit(robot, cspace, obj_pt)
         else:
-            solution = self.goal_rotation_transfer(robot, cspace, obj_pt, rot)
+            solution = self.goal_definition_transfer(robot, cspace, obj_pt)
+            # solution = self.goal_rotation_transfer(robot, cspace, obj_pt, rot)
 
         if solution is not None:
             grasp, grasparm = solution
@@ -102,6 +104,35 @@ class Hand:
                 return res
         print("Solution to the transit problem hasn't been found")
         exit()
+
+    def goal_definition_transfer(self, robot, cspace, obj_pt):
+        Tobj0 = self.object.getTransform()
+        Thand0 = robot.link(self.link).getTransform()
+        t0 = vectorops.sub(Thand0[1], Tobj0[1])
+        for i in range(self.indeces[0], 4):
+            for j in range(self.indeces[1], 4):
+                for k in range(self.indeces[2], 4):
+                    angle = (i * math.pi / 2, j * math.pi / 2, k * math.pi / 2)
+                    rot_matrix = euler_angle_to_rotation(angle)
+                    rotObj = so3.mul(rot_matrix, Thand0[0])
+                    t = so3.apply(rot_matrix, t0)
+                    goal = ik.objective(robot.link("tool0"),
+                                        R=rotObj,
+                                        t=vectorops.add(obj_pt, t))
+                    res = self.solve(robot, cspace, goal)
+                    if res is not None:
+                        k += 1
+                        if k >= 4:
+                            j += 1
+                            k = 0
+                            if j >= 4:
+                                i += 1
+                                j = 0
+                        self.indeces = [i, j, k]
+                        return res
+                print("Solution to the transfer problem hasn't been found")
+                return None
+        return
 
     def goal_rotation_transfer(self, robot, cspace, obj_pt, rot):
         """
@@ -127,13 +158,13 @@ class Hand:
         print("START ANGLE", start_angle)
         for i in range(i_old, 4):
             #angleX = (i * math.pi/2, 0, 0)
-            angleX = ((i * math.pi / 2) + start_angle[0], 0, 0)
+            angleX = ((i * math.pi / 2) - start_angle[0], 0, 0)
             for j in range(j_old, 4):
                 #angleY = (0, j * math.pi / 2, 0)
-                angleY = (0, (j * math.pi / 2) + start_angle[1], 0)
+                angleY = (0, (j * math.pi / 2) - start_angle[1], 0)
                 for k in range(k_old, 4):
                     #angleZ = (0, 0, k * math.pi / 2)
-                    angleZ = (0, 0, (k * math.pi / 2) + start_angle[2])
+                    angleZ = (0, 0, (k * math.pi / 2) - start_angle[2])
                     if rot:
                         if (i == 0 and j == 0 and k == 0) or (i == 2 and j == 2 and k == 2):
                             continue
@@ -642,7 +673,7 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             new_mesh.setTransform(R, dest)
             new_mesh.geometry().scale(scale[0], scale[1], scale[2])
 
-            color_arr = fill_colors(new_mesh, 6)
+            color_arr = fill_colors_collision(new_mesh, 6)
             trimeshes.append(own_mesh)
             verts = np.array(m.vertices).reshape(len(m.vertices)//3, 3)
             verti_arr = []

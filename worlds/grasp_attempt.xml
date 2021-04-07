@@ -30,111 +30,111 @@
     <!-- TERRAIN -->
     <terrain file="objects/terrains/plane.off"/>
 
-<!--    &lt;!&ndash; the table &ndash;&gt;-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.4" translation="0.8 0.25 0.01">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.4" translation="0.8 -0.25 0.01">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.4" translation="1.3 0.25 0.01">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.4" translation="1.3 -0.25 0.01">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.6 0.6 0.02" translation="0.775 -0.275 0.4">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
+    <!-- the table -->
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.4" translation="0.8 0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.4" translation="0.8 -0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.4" translation="1.3 0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.4" translation="1.3 -0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.6 0.6 0.02" translation="0.775 -0.275 0.4">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
 
 
-<!--     &lt;!&ndash; the table &ndash;&gt;-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="0.3 0.25 0.01">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="0.3 -0.25 0.01">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.6 0.6 0.02" translation="0.275 -0.275 0.2">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.2" translation="0.775 -0.275 0.2">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
+     <!-- the table -->
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="0.3 0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="0.3 -0.25 0.01">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.6 0.6 0.02" translation="0.275 -0.275 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.2" translation="0.775 -0.275 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
 
 
-<!--    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.6" translation="1.37 -0.275 0.2">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
+    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.6" translation="1.37 -0.275 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
 
-<!--    <terrain file="objects/terrains/cube.off" scale="0.6 0.02 0.6" translation="0.775 -0.275 0.2">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.6 0.02 0.6" translation="0.775 0.31 0.2">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.6 0.6 0.02" translation="0.785 -0.275 0.8">-->
-<!--        <display color="0.8 0.3 0.2"/>-->
-<!--    </terrain>-->
+    <terrain file="objects/terrains/cube.off" scale="0.6 0.02 0.6" translation="0.775 -0.275 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.6 0.02 0.6" translation="0.775 0.31 0.2">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.6 0.6 0.02" translation="0.785 -0.275 0.8">
+        <display color="0.8 0.3 0.2"/>
+    </terrain>
 
-<!--      &lt;!&ndash; the table &ndash;&gt;-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="-0.5 0.25 0.01">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="-0.5 -0.25 0.01">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="-1 0.25 0.01">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="-1 -0.25 0.01">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.6 0.6 0.02" translation="-1.025 -0.275 0.2">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
+      <!-- the table -->
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="-0.5 0.25 0.01">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="-0.5 -0.25 0.01">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="-1 0.25 0.01">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.05 0.05 0.2" translation="-1 -0.25 0.01">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.6 0.6 0.02" translation="-1.025 -0.275 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
 
-<!--    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.6" translation="-1.025 -0.275 0.2">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.6 0.02 0.6" translation="-1.025 -0.275 0.2">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.6 0.02 0.6" translation="-1.025 0.325 0.2">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
-<!--    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.1" translation="-0.525 -0.275 0.2">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
+    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.6" translation="-1.025 -0.275 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.6 0.02 0.6" translation="-1.025 -0.275 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.6 0.02 0.6" translation="-1.025 0.325 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
+    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.1" translation="-0.525 -0.275 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
 
 
 <!--     RIGID OBJECTS-->
 <!--    <rigidObject name="donat" file="objects/objects/poopie.off" scale="1 1 1" position="1 1 1" >-->
 <!--            <display faceColor="1 1 0"/>-->
 <!--    </rigidObject>-->
-<!--&lt;!&ndash;    <rigidObject name="coll_check1" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.48 0.245 0.27" >&ndash;&gt;-->
-<!--&lt;!&ndash;            <display faceColor="1 0 0"/>&ndash;&gt;-->
-<!--&lt;!&ndash;            <geometry scale="0.4 0.05 0.9"/>&ndash;&gt;-->
-<!--&lt;!&ndash;    </rigidObject>&ndash;&gt;-->
+<!--    <rigidObject name="coll_check1" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.48 0.245 0.27" >-->
+<!--            <display faceColor="1 0 0"/>-->
+<!--            <geometry scale="0.4 0.05 0.9"/>-->
+<!--    </rigidObject>-->
 <!--    <rigidObject name="bar" file="objects/objects/block_small.obj" scale="1.5 1.5 1.5" position="0.5 0 0.27" />-->
-<!--&lt;!&ndash;    <rigidObject name="coll_check" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.48 0.045 0.27" >&ndash;&gt;-->
-<!--&lt;!&ndash;            <display faceColor="1 0 0"/>&ndash;&gt;-->
-<!--&lt;!&ndash;            <geometry scale="0.4 0.05 0.9"/>&ndash;&gt;-->
-<!--&lt;!&ndash;    </rigidObject>&ndash;&gt;-->
+<!--    <rigidObject name="coll_check" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.48 0.045 0.27" >-->
+<!--            <display faceColor="1 0 0"/>-->
+<!--            <geometry scale="0.4 0.05 0.9"/>-->
+<!--    </rigidObject>-->
 <!--    <rigidObject name="bar2" file="objects/objects/block_small.obj" scale="1.5 1.5 1.5" position="0.2 0.4 0.07" >-->
 <!--            <display faceColor="0.2 0.2 0.3"/>-->
 <!--    </rigidObject>-->
-<!--&lt;!&ndash;    <rigidObject name="coll_check2" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.18 0.445 0.07" >&ndash;&gt;-->
-<!--&lt;!&ndash;            <display faceColor="1 0 0"/>&ndash;&gt;-->
-<!--&lt;!&ndash;            <geometry scale="0.4 0.05 0.9"/>&ndash;&gt;-->
-<!--&lt;!&ndash;    </rigidObject>&ndash;&gt;-->
+<!--    <rigidObject name="coll_check2" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.18 0.445 0.07" >-->
+<!--            <display faceColor="1 0 0"/>-->
+<!--            <geometry scale="0.4 0.05 0.9"/>-->
+<!--    </rigidObject>-->
 <!--    <rigidObject name="bar3" file="objects/objects/block_small.obj" scale="1.5 1.5 1.5" position="-0.4 -0.4 0.07" >-->
 <!--            <display faceColor="0.2 0.2 0.3"/>-->
 <!--    </rigidObject>-->
-<!--&lt;!&ndash;    <rigidObject name="coll_check3" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="-0.42 -0.355 0.07" >&ndash;&gt;-->
-<!--&lt;!&ndash;            <display faceColor="1 0 0"/>&ndash;&gt;-->
-<!--&lt;!&ndash;            <geometry scale="0.4 0.05 0.9"/>&ndash;&gt;-->
-<!--&lt;!&ndash;    </rigidObject>&ndash;&gt;-->
+<!--    <rigidObject name="coll_check3" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="-0.42 -0.355 0.07" >-->
+<!--            <display faceColor="1 0 0"/>-->
+<!--            <geometry scale="0.4 0.05 0.9"/>-->
+<!--    </rigidObject>-->
 
 <!--    <rigidObject name="VECTOR" file="objects/objects/block_small.obj" scale="1.5 1.5 1.5" position="0.5 0.5 0.5" >-->
 <!--            <display faceColor="1 1 0"/>-->

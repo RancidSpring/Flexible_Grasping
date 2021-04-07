@@ -46,9 +46,12 @@ def calculate_normal(v1, v2, v3):
     b = np.subtract(v3, v1)
     cross = np.cross(a, b)
     normal = cross/(np.linalg.norm(cross))
-    print(normal)
     return normal
 
+def transfer_pose(R_obj, Rgrip_start):
+    pose_arr = []
+
+    return pose_arr
 
 def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
