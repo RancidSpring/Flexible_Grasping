@@ -1,7 +1,7 @@
 import trimesh
 # import pyvista as pv
 import numpy as np
-# from Py3DViewer import Trimesh
+from Py3DViewer import Trimesh
 import time
 from pygel3d import hmesh, gl_display as gl
 from pygel3d import jupyter_display as jd
@@ -62,10 +62,8 @@ def plot_subdivisions(mesh, a, b):
 # print(lol)
 
 
-# m = Trimesh('objects/objects/Donat.obj')
-# m.show()
 
-way = "objects/objects/Flashlight2.obj"
+# way = "objects/objects/Flashlight2.obj"
 # f = open(way, "r")
 # resolver = trimesh.resolvers.FilePathResolver.get(mtl)
 # print(dir(resolver))
@@ -78,29 +76,55 @@ way = "objects/objects/Flashlight2.obj"
 # print(visuals.face_colors)
 
 file_name = 'objects/objects/Flashlight2.obj'
-# resolver = trimesh.visual.resolvers.FilePathResolver(file_name)
-# with open(file_name, 'r') as f:
-#     kwargs = trimesh.exchange.obj.load_obj(f, resolver=resolver)
-# print(kwargs)
-# scene = trimesh.exchange.load.load_kwargs(kwargs)
-# visuals = trimesh.visual.color.ColorVisuals(list(scene.geometry.items())[1][1])
-# print(visuals.face_colors)
-
-
+# # resolver = trimesh.visual.resolvers.FilePathResolver(file_name)
+# # with open(file_name, 'r') as f:
+# #     kwargs = trimesh.exchange.obj.load_obj(f, resolver=resolver)
+# # print(kwargs)
+# # scene = trimesh.exchange.load.load_kwargs(kwargs)
+#
+#
+#
 # mesh = trimesh.load(file_name)
 # mesh.show()
 # visuals = list(mesh.geometry.items())[1][1].visual.to_color().face_colors
-# visuals = mesh.visual
-# print(mesh)
-# visuals = trimesh.visual.color.ColorVisuals(list(list(kwargs["geometry"].items())[1][1]))
-# print(visuals.face_colors)
-# list(kwargs["geometry"].items())[1][1]
+# # visuals = mesh.visual
+# print(visuals)
+
+
+
 # import pywavefront
 # scene = pywavefront.Wavefront('objects/objects/Flashlight2.obj')
 # print(scene)
 
-# m = hmesh.load("objects/objects/bulb.obj")
+# m = hmesh.load("objects/objects/corona.obj")
 # viewer = gl.Viewer()
 # viewer.display(m, mode='w')
 # jd.set_export_mode(True)
 # jd.display(m, smooth=False)
+
+start = time.time()
+a = [[1, 5, 2], [10, 4, 11], [100, 50, 200]]
+b = []
+for lol in a:
+    kek = sorted(lol)
+    b.append(kek)
+end = time.time()
+print(a)
+print(b)
+print(end - start)
+
+
+start = time.time()
+
+a = [[1, 5, 2], [10, 4, 11], [100, 50, 200]]
+
+for j in range(len(a)):
+    a[j] = sorted(a[j])
+end = time.time()
+print(a)
+print(b)
+print(end-start)
+
+color_arr = [[0 for col in range(3)] for row in range(10)]
+color_arr[2][2] = 210
+print(color_arr)

@@ -9,18 +9,15 @@ from klampt.vis.colorize import *
 from klampt import vis
 from klampt.math import vectorops, so3, se3
 from klampt.plan.cspace import CSpace, MotionPlan
-from openkukagrip import openhand
+from utilities.openkukagrip import openhand
 from OpenGL.GL import *
 import math
 import time
 import numpy as np
 from numpy import asarray
 from numpy import savetxt
-from numpy import random
 import trimesh
-import pyvista
-import networkx as nx
-from collision_color import *
+from utilities.collision_color import *
 
 
 # global variable used to store the latest tried config of the arm in case path wasn't found
@@ -388,7 +385,7 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         # draw points on the robot
         kukaarm = self.hand
         glDisable(GL_LIGHTING)
-        glPointSize(5.0)
+        glPointSize(10.0)
         glDisable(GL_DEPTH_TEST)
         glBegin(GL_POINTS)
 
@@ -411,14 +408,14 @@ class GLPickAndPlacePlugin(GLPluginInterface):
         glVertex3fv(se3.apply(self.world.robot(0).link(kukaarm.link).getTransform(), kukaarm.GripperPoint2))
 
         # points on the terrain
-        glColor3f(0.5, 0.3, 0)
-        glVertex3fv([0.5, 0.2, 0.265])
-        glColor3f(0.5, 0.3, 1)
-        glVertex3fv([0.5, -0.05, 0.265])
-        glColor3f(0.5, 1, 0.5)
-        glVertex3fv([-0.6, -0.05, 0.265])
-        glColor3f(0.5, 0.3, 0)
-        glVertex3fv([-0.6, 0.2, 0.265])
+        # glColor3f(0.5, 0.3, 0)
+        # glVertex3fv([0.5, 0.2, 0.265])
+        # glColor3f(0.5, 0.3, 1)
+        # glVertex3fv([0.5, -0.05, 0.265])
+        # glColor3f(0.5, 1, 0.5)
+        # glVertex3fv([-0.6, -0.05, 0.265])
+        # glColor3f(0.5, 0.3, 0)
+        # glVertex3fv([-0.6, 0.2, 0.265])
         glEnd()
         glEnable(GL_DEPTH_TEST)
 
@@ -634,13 +631,13 @@ class GLPickAndPlacePlugin(GLPluginInterface):
             new_mesh.geometry().setTriangleMesh(m)
             new_mesh.setTransform([0, 1, 0, 0, 0, 1, 1, 0, 0], dest)
             new_mesh.geometry().scale(scale[0], scale[1], scale[2])
-            color_arr = fill_colors(new_mesh, 6)
+            # color_arr = fill_colors(new_mesh, 6)
             trimeshes.append(own_mesh)
         vis.lock()
         vis.remove("world")
         vis.add("world", self.world)
-        vis.colorize.colorize(new_mesh, color_arr)
-        #vis.colorize.colorize(new_mesh, 'index', 'random', 'faces')
+        # vis.colorize.colorize(new_mesh, color_arr)
+        # vis.colorize.colorize(new_mesh, 'index', 'random', 'faces')
         vis.unlock()
         return trimeshes
 
@@ -831,8 +828,8 @@ if __name__ == "__main__":
     vis.add("world", world)
     vis.setWindowTitle("Pick and place test, use a/b/c/d to select target")
     vis.pushPlugin(GLPickAndPlacePlugin(world))
-    vis.setColor(('world', 'kuka', world.robot(0).link(17).getName()), 0, 255, 0, a=1.0)
-    vis.setColor(('world', 'kuka', world.robot(0).link(19).getName()), 0, 255, 0, a=1.0)
+    # vis.setColor(('world', 'kuka', world.robot(0).link(17).getName()), 0, 255, 0, a=1.0)
+    # vis.setColor(('world', 'kuka', world.robot(0).link(19).getName()), 0, 255, 0, a=1.0)
     vis.show()
 
     while vis.shown():

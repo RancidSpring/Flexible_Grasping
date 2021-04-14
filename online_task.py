@@ -1,4 +1,3 @@
-from klampt import *
 from klampt.model import contact
 from klampt.model.create import *
 from klampt.model import ik
@@ -8,21 +7,17 @@ from klampt.vis.glcommon import *
 from klampt import vis
 from klampt.math import vectorops, so3, se3
 from klampt.plan.cspace import CSpace, MotionPlan
-from openkukagrip import openhand
+from utilities.openkukagrip import openhand
 from OpenGL.GL import *
 from klampt import TriangleMesh
 import numpy as np
-from numpy import append
-from numpy import array
 from numpy import asarray
-from numpy import savetxt
 from numpy import loadtxt
 from numpy import flip
 import math
 import time
 import trimesh
-import networkx as nx
-from collision_color import *
+from utilities.collision_color import *
 
 trans_ind = 0
 filename = "grasping_database/cube_grasp_uti4.csv"

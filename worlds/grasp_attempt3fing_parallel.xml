@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world>
     <!--robot name="kuka" file="../bin/merged.rob" translation="0 0 0.01"/-->
-    <robot name="kuka" file="robots/kuka/kuka_adaptive2fing.rob" translation="0 0 0.01">
-    <!--<robot name="tx90l" file="../../data/robots/tx90robotiq.rob" translation="0 0 0" color="0.2 1 0.5">-->
-        <sensors>
-          <JointPositionSensor name="encoders" indices="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18"/>
-          <!--<DriverTorqueSensor name="current_sensors" indices="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14"/>-->
-          <ForceTorqueSensor name="Base_ForceSensor" link="6" hasForce="0 0 1" hasTorque="1 1 0"/>
-          <ForceTorqueSensor name="Link1_ForceSensor" link="7" hasForce="0 0 1" hasTorque="1 1 0"/>
-          <ForceTorqueSensor name="Link2_ForceSensor" link="8" hasForce="0 0 1" hasTorque="1 1 0"/>
-          <ForceTorqueSensor name="Link3_ForceSensor" link="9" hasForce="0 0 1" hasTorque="1 1 0"/>
-          <ForceTorqueSensor name="Link4_ForceSensor" link="10" hasForce="0 0 1" hasTorque="1 1 0"/>
-          <ForceTorqueSensor name="Link5_ForceSensor" link="11" hasForce="0 0 1" hasTorque="1 1 0"/>
-          <ForceTorqueSensor name="Link6_ForceSensor" link="12" hasForce="0 0 1" hasTorque="1 1 0"/>
-          <ForceTorqueSensor name="Link7_ForceSensor" link="13" hasForce="0 0 1" hasTorque="1 1 0"/>
-          <ForceTorqueSensor name="Link8_ForceSensor" link="14" hasForce="0 0 1" hasTorque="1 1 0"/>
-          <FilteredSensor name="Base_ForceSensor_Filtered" sensor="Base_ForceSensor" smoothing="0.8" />
-          <FilteredSensor name="Link1_ForceSensor_Filtered" sensor="Link1_ForceSensor" smoothing="0.8" />
-          <FilteredSensor name="Link2_ForceSensor_Filtered" sensor="Link2_ForceSensor" smoothing="0.8" />
-          <FilteredSensor name="Link3_ForceSensor_Filtered" sensor="Link3_ForceSensor" smoothing="0.8" />
-          <FilteredSensor name="Link4_ForceSensor_Filtered" sensor="Link4_ForceSensor" smoothing="0.8" />
-          <FilteredSensor name="Link5_ForceSensor_Filtered" sensor="Link5_ForceSensor" smoothing="0.8" />
-          <FilteredSensor name="Link6_ForceSensor_Filtered" sensor="Link6_ForceSensor" smoothing="0.8" />
-          <FilteredSensor name="Link7_ForceSensor_Filtered" sensor="Link7_ForceSensor" smoothing="0.8" />
-          <FilteredSensor name="Link8_ForceSensor_Filtered" sensor="Link8_ForceSensor" smoothing="0.8" />
-        </sensors>
+    <robot name="kuka" file="robots/kuka/kuka_parallel3fing.rob" translation="0 0 0.01">
+<!--        <sensors>-->
+<!--          <JointPositionSensor name="encoders" indices="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18"/>-->
+<!--          &lt;!&ndash;<DriverTorqueSensor name="current_sensors" indices="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14"/>&ndash;&gt;-->
+<!--          <ForceTorqueSensor name="Base_ForceSensor" link="6" hasForce="0 0 1" hasTorque="1 1 0"/>-->
+<!--          <ForceTorqueSensor name="Link1_ForceSensor" link="7" hasForce="0 0 1" hasTorque="1 1 0"/>-->
+<!--          <ForceTorqueSensor name="Link2_ForceSensor" link="8" hasForce="0 0 1" hasTorque="1 1 0"/>-->
+<!--          <ForceTorqueSensor name="Link3_ForceSensor" link="9" hasForce="0 0 1" hasTorque="1 1 0"/>-->
+<!--          <ForceTorqueSensor name="Link4_ForceSensor" link="10" hasForce="0 0 1" hasTorque="1 1 0"/>-->
+<!--          <ForceTorqueSensor name="Link5_ForceSensor" link="11" hasForce="0 0 1" hasTorque="1 1 0"/>-->
+<!--          <ForceTorqueSensor name="Link6_ForceSensor" link="12" hasForce="0 0 1" hasTorque="1 1 0"/>-->
+<!--          <ForceTorqueSensor name="Link7_ForceSensor" link="13" hasForce="0 0 1" hasTorque="1 1 0"/>-->
+<!--          <ForceTorqueSensor name="Link8_ForceSensor" link="14" hasForce="0 0 1" hasTorque="1 1 0"/>-->
+<!--          <FilteredSensor name="Base_ForceSensor_Filtered" sensor="Base_ForceSensor" smoothing="0.8" />-->
+<!--          <FilteredSensor name="Link1_ForceSensor_Filtered" sensor="Link1_ForceSensor" smoothing="0.8" />-->
+<!--          <FilteredSensor name="Link2_ForceSensor_Filtered" sensor="Link2_ForceSensor" smoothing="0.8" />-->
+<!--          <FilteredSensor name="Link3_ForceSensor_Filtered" sensor="Link3_ForceSensor" smoothing="0.8" />-->
+<!--          <FilteredSensor name="Link4_ForceSensor_Filtered" sensor="Link4_ForceSensor" smoothing="0.8" />-->
+<!--          <FilteredSensor name="Link5_ForceSensor_Filtered" sensor="Link5_ForceSensor" smoothing="0.8" />-->
+<!--          <FilteredSensor name="Link6_ForceSensor_Filtered" sensor="Link6_ForceSensor" smoothing="0.8" />-->
+<!--          <FilteredSensor name="Link7_ForceSensor_Filtered" sensor="Link7_ForceSensor" smoothing="0.8" />-->
+<!--          <FilteredSensor name="Link8_ForceSensor_Filtered" sensor="Link8_ForceSensor" smoothing="0.8" />-->
+<!--        </sensors>-->
     </robot>
 
     <!-- TERRAIN -->
@@ -103,38 +102,38 @@
     <terrain file="objects/terrains/cube.off" scale="0.6 0.02 0.6" translation="-1.025 0.325 0.2">
         <display color="0.4 0.6 0.2"/>
     </terrain>
-<!--    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.1" translation="-0.525 -0.275 0.2">-->
-<!--        <display color="0.4 0.6 0.2"/>-->
-<!--    </terrain>-->
+    <terrain file="objects/terrains/cube.off" scale="0.02 0.6 0.1" translation="-0.525 -0.275 0.2">
+        <display color="0.4 0.6 0.2"/>
+    </terrain>
 
 
 <!--     RIGID OBJECTS-->
 <!--    <rigidObject name="donat" file="objects/objects/poopie.off" scale="1 1 1" position="1 1 1" >-->
 <!--            <display faceColor="1 1 0"/>-->
 <!--    </rigidObject>-->
-<!--    <rigidObject name="coll_check1" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.48 0.245 0.27" >-->
-<!--            <display faceColor="1 0 0"/>-->
-<!--            <geometry scale="0.4 0.05 0.9"/>-->
-<!--    </rigidObject>-->
+<!--&lt;!&ndash;    <rigidObject name="coll_check1" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.48 0.245 0.27" >&ndash;&gt;-->
+<!--&lt;!&ndash;            <display faceColor="1 0 0"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <geometry scale="0.4 0.05 0.9"/>&ndash;&gt;-->
+<!--&lt;!&ndash;    </rigidObject>&ndash;&gt;-->
 <!--    <rigidObject name="bar" file="objects/objects/block_small.obj" scale="1.5 1.5 1.5" position="0.5 0 0.27" />-->
-<!--    <rigidObject name="coll_check" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.48 0.045 0.27" >-->
-<!--            <display faceColor="1 0 0"/>-->
-<!--            <geometry scale="0.4 0.05 0.9"/>-->
-<!--    </rigidObject>-->
+<!--&lt;!&ndash;    <rigidObject name="coll_check" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.48 0.045 0.27" >&ndash;&gt;-->
+<!--&lt;!&ndash;            <display faceColor="1 0 0"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <geometry scale="0.4 0.05 0.9"/>&ndash;&gt;-->
+<!--&lt;!&ndash;    </rigidObject>&ndash;&gt;-->
 <!--    <rigidObject name="bar2" file="objects/objects/block_small.obj" scale="1.5 1.5 1.5" position="0.2 0.4 0.07" >-->
 <!--            <display faceColor="0.2 0.2 0.3"/>-->
 <!--    </rigidObject>-->
-<!--    <rigidObject name="coll_check2" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.18 0.445 0.07" >-->
-<!--            <display faceColor="1 0 0"/>-->
-<!--            <geometry scale="0.4 0.05 0.9"/>-->
-<!--    </rigidObject>-->
+<!--&lt;!&ndash;    <rigidObject name="coll_check2" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="0.18 0.445 0.07" >&ndash;&gt;-->
+<!--&lt;!&ndash;            <display faceColor="1 0 0"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <geometry scale="0.4 0.05 0.9"/>&ndash;&gt;-->
+<!--&lt;!&ndash;    </rigidObject>&ndash;&gt;-->
 <!--    <rigidObject name="bar3" file="objects/objects/block_small.obj" scale="1.5 1.5 1.5" position="-0.4 -0.4 0.07" >-->
 <!--            <display faceColor="0.2 0.2 0.3"/>-->
 <!--    </rigidObject>-->
-<!--    <rigidObject name="coll_check3" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="-0.42 -0.355 0.07" >-->
-<!--            <display faceColor="1 0 0"/>-->
-<!--            <geometry scale="0.4 0.05 0.9"/>-->
-<!--    </rigidObject>-->
+<!--&lt;!&ndash;    <rigidObject name="coll_check3" file="objects/objects/block_small.obj" scale="1.51 1.51 0.751" position="-0.42 -0.355 0.07" >&ndash;&gt;-->
+<!--&lt;!&ndash;            <display faceColor="1 0 0"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <geometry scale="0.4 0.05 0.9"/>&ndash;&gt;-->
+<!--&lt;!&ndash;    </rigidObject>&ndash;&gt;-->
 
 <!--    <rigidObject name="VECTOR" file="objects/objects/block_small.obj" scale="1.5 1.5 1.5" position="0.5 0.5 0.5" >-->
 <!--            <display faceColor="1 1 0"/>-->
